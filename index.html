@@ -4,108 +4,278 @@
   <meta charset="UTF-8" />
   <title>Pythagorean Squares Rotator</title>
   <style>
-    body { font-family: system-ui, sans-serif; }
-    #controls { margin: 1rem; }
-    svg { border: 1px solid #ccc; display: block; margin: 0 auto; }
+    :root {
+      --red: #C51D34;
+      --charcoal: #2E2E30;
+      --gray: #808080;
+      --offwhite: #F5F5F5;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--offwhite);
+      color: var(--charcoal);
+    }
+
+    header {
+      background: var(--charcoal);
+      color: var(--offwhite);
+      padding: 10px 20px;
+      text-align: center;
+    }
+
+    h1 { margin: 0; font-size: 1.4rem; }
+
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .manip-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    #canvas-container {
+      flex: 0 0 auto;
+      background: white;
+      border: 4px solid var(--gray);
+      border-radius: 8px;
+      padding: 10px;
+      position: relative;
+      margin: 0 auto;
+      width: fit-content;
+    }
+
+    #viz-container {
+      position: relative;
+      width: 900px;
+      height: 900px;
+    }
+
+    svg {
+      border: 1px solid #ccc;
+      display: block;
+    }
+
+    /* slider in lower-right corner of the canvas area */
+    #slider-wrapper {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    #slider-wrapper label {
+      margin-right: 4px;
+    }
+
+    #slider-wrapper input[type="range"] {
+      vertical-align: middle;
+    }
+
+    .right-column {
+      position: relative;
+      top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: stretch;
+      justify-content: flex-start;
+      width: 220px;
+    }
+
+    #ixlBtn {
+      background: #2ECC40;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    #ixlBtn:hover { background: #27AE60; }
+
+    #videosBtn {
+      background: var(--red);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    #videosBtn:hover { background: #A01829; }
+
+    #practiceBtn {
+      background-color: #c41524;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    footer {
+      margin-top: 20px;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
   </style>
 </head>
 <body>
-  <div id="controls">
-    <label for="angle">Angle: </label>
-    <!-- 0..180 mapped to old 37..217 in JS -->
-    <input id="angle" type="range" min="0" max="180" value="0" />
-    <span id="angleValue">0°</span>
-  </div>
+  <header>
+    <h1>Pythagorean Theorem – Squares on the Sides</h1>
+  </header>
 
-  <!-- Canvas centered at (0,0) in viewBox -->
-  <svg id="canvas" viewBox="-296.6667 -310 700 700" width="900" height="900">
-    <!-- deviceWrapper will be rotated around the triangle centroid -->
-    <g id="deviceWrapper">
-      <g id="device">
-        <!-- Triangle: vertices (0,0), (160,0), (0,120) -->
-        <line x1="0" y1="0" x2="160" y2="0"
-              stroke="#011b2b" stroke-width="3" />
-        <line x1="0" y1="0" x2="0" y2="120"
-              stroke="#011b2b" stroke-width="3" />
-        <line x1="160" y1="0" x2="0" y2="120"
-              stroke="#011b2b" stroke-width="3" />
-        <!-- side labels -->
-        <text x="-95" y="113" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-              transform="rotate(180 -10 60)"
-              fill="#c62828">b</text>      <!-- horizontal leg (red) -->
-        <text x="-5" y="43" text-anchor="end" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-              transform="rotate(90 -10 60)"
-              fill="#1565c0">a</text>       <!-- vertical leg (blue) -->
-        <text x="60" y="105" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-              transform="rotate(-35 -10 60)"
-              fill="#6a1b9a">c</text>      <!-- hypotenuse (purple) -->
+  <main>
+    <div class="manip-row">
+      <section id="canvas-container">
+        <div id="viz-container">
+          <!-- Canvas centered at (0,0) in viewBox -->
+          <svg id="canvas" viewBox="-296.6667 -310 700 700" width="900" height="900">
+            <!-- deviceWrapper will be rotated around the triangle centroid -->
+            <g id="deviceWrapper">
+              <g id="device">
+                <!-- Triangle: vertices (0,0), (160,0), (0,120) -->
+                <line x1="0" y1="0" x2="160" y2="0"
+                      stroke="#011b2b" stroke-width="3" />
+                <line x1="0" y1="0" x2="0" y2="120"
+                      stroke="#011b2b" stroke-width="3" />
+                <line x1="160" y1="0" x2="0" y2="120"
+                      stroke="#011b2b" stroke-width="3" />
+                <!-- side labels -->
+                <text x="-95" y="113" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                      transform="rotate(180 -10 60)"
+                      fill="#c62828">b</text>
+                <text x="-5" y="43" text-anchor="end" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                      transform="rotate(90 -10 60)"
+                      fill="#1565c0">a</text>
+                <text x="60" y="105" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                      transform="rotate(-35 -10 60)"
+                      fill="#6a1b9a">c</text>
 
-        <!-- Square on horizontal leg (160) with 4x4 grid -->
-        <g id="squareB">
-          <!-- 4x4 grid (light red) -->
-          <line x1="40" y1="-160" x2="40" y2="0" stroke="#ffcdd2" stroke-width="1" />
-          <line x1="80" y1="-160" x2="80" y2="0" stroke="#ffcdd2" stroke-width="1" />
-          <line x1="120" y1="-160" x2="120" y2="0" stroke="#ffcdd2" stroke-width="1" />
-          <line x1="0" y1="-120" x2="160" y2="-120" stroke="#ffcdd2" stroke-width="1" />
-          <line x1="0" y1="-80"  x2="160" y2="-80"  stroke="#ffcdd2" stroke-width="1" />
-          <line x1="0" y1="-40"  x2="160" y2="-40"  stroke="#ffcdd2" stroke-width="1" />
-          <rect x="0" y="-160" width="160" height="160"
-                fill="none" stroke="#c62828" stroke-width="6" />
-          <polygon id="liqB"
-                   fill="rgba(198,40,40,0.25)" stroke="none" />
-        </g>
+                <!-- Square on horizontal leg (160) with 4x4 grid -->
+                <g id="squareB">
+                  <!-- 4x4 grid (light red) -->
+                  <line x1="40" y1="-160" x2="40" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                  <line x1="80" y1="-160" x2="80" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                  <line x1="120" y1="-160" x2="120" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                  <line x1="0" y1="-120" x2="160" y2="-120" stroke="#ffcdd2" stroke-width="1" />
+                  <line x1="0" y1="-80"  x2="160" y2="-80"  stroke="#ffcdd2" stroke-width="1" />
+                  <line x1="0" y1="-40"  x2="160" y2="-40"  stroke="#ffcdd2" stroke-width="1" />
+                  <rect x="0" y="-160" width="160" height="160"
+                        fill="none" stroke="#c62828" stroke-width="6" />
+                  <polygon id="liqB"
+                           fill="rgba(198,40,40,0.25)" stroke="none" />
+                </g>
 
-        <!-- Square on vertical leg (120) with 3x3 grid -->
-        <g id="squareA">
-          <!-- 3x3 grid (light blue) -->
-          <line x1="-80" y1="0"  x2="-80" y2="120" stroke="#bbdefb" stroke-width="1" />
-          <line x1="-40" y1="0"  x2="-40" y2="120" stroke="#bbdefb" stroke-width="1" />
-          <line x1="-120" y1="40" x2="0"   y2="40"  stroke="#bbdefb" stroke-width="1" />
-          <line x1="-120" y1="80" x2="0"   y2="80"  stroke="#bbdefb" stroke-width="1" />
-          <rect x="-120" y="0" width="120" height="120"
-                fill="none" stroke="#1565c0" stroke-width="6" />
-          <polygon id="liqA"
-                   fill="rgba(21,101,192,0.25)" stroke="none" />
-        </g>
+                <!-- Square on vertical leg (120) with 3x3 grid -->
+                <g id="squareA">
+                  <!-- 3x3 grid (light blue) -->
+                  <line x1="-80" y1="0"  x2="-80" y2="120" stroke="#bbdefb" stroke-width="1" />
+                  <line x1="-40" y1="0"  x2="-40" y2="120" stroke="#bbdefb" stroke-width="1" />
+                  <line x1="-120" y1="40" x2="0"   y2="40"  stroke="#bbdefb" stroke-width="1" />
+                  <line x1="-120" y1="80" x2="0"   y2="80"  stroke="#bbdefb" stroke-width="1" />
+                  <rect x="-120" y="0" width="120" height="120"
+                        fill="none" stroke="#1565c0" stroke-width="6" />
+                  <polygon id="liqA"
+                           fill="rgba(21,101,192,0.25)" stroke="none" />
+                </g>
 
-        <!-- Big square on hypotenuse with 5x5 grid -->
-        <g id="bigSquare" transform="translate(0,120) rotate(-36.87)">
-          <!-- 5x5 grid (light purple) -->
-          <line x1="40"  y1="0"   x2="40"  y2="200" stroke="#e1bee7" stroke-width="1" />
-          <line x1="80"  y1="0"   x2="80"  y2="200" stroke="#e1bee7" stroke-width="1" />
-          <line x1="120" y1="0"   x2="120" y2="200" stroke="#e1bee7" stroke-width="1" />
-          <line x1="160" y1="0"   x2="160" y2="200" stroke="#e1bee7" stroke-width="1" />
-          <line x1="0"   y1="40"  x2="200" y2="40"  stroke="#e1bee7" stroke-width="1" />
-          <line x1="0"   y1="80"  x2="200" y2="80"  stroke="#e1bee7" stroke-width="1" />
-          <line x1="0"   y1="120" x2="200" y2="120" stroke="#e1bee7" stroke-width="1" />
-          <line x1="0"   y1="160" x2="200" y2="160" stroke="#e1bee7" stroke-width="1" />
-          <rect x="0" y="0" width="200" height="200"
-                fill="none" stroke="#6a1b9a" stroke-width="6" />
-          <polygon id="liqC"
-                   fill="rgba(106,27,154,0.25)" stroke="none" />
-        </g>
-      </g>
-    </g>
+                <!-- Big square on hypotenuse with 5x5 grid -->
+                <g id="bigSquare" transform="translate(0,120) rotate(-36.87)">
+                  <!-- 5x5 grid (light purple) -->
+                  <line x1="40"  y1="0"   x2="40"  y2="200" stroke="#e1bee7" stroke-width="1" />
+                  <line x1="80"  y1="0"   x2="80"  y2="200" stroke="#e1bee7" stroke-width="1" />
+                  <line x1="120" y1="0"   x2="120" y2="200" stroke="#e1bee7" stroke-width="1" />
+                  <line x1="160" y1="0"   x2="160" y2="200" stroke="#e1bee7" stroke-width="1" />
+                  <line x1="0"   y1="40"  x2="200" y2="40"  stroke="#e1bee7" stroke-width="1" />
+                  <line x1="0"   y1="80"  x2="200" y2="80"  stroke="#e1bee7" stroke-width="1" />
+                  <line x1="0"   y1="120" x2="200" y2="120" stroke="#e1bee7" stroke-width="1" />
+                  <line x1="0"   y1="160" x2="200" y2="160" stroke="#e1bee7" stroke-width="1" />
+                  <rect x="0" y="0" width="200" height="200"
+                        fill="none" stroke="#6a1b9a" stroke-width="6" />
+                  <polygon id="liqC"
+                           fill="rgba(106,27,154,0.25)" stroke="none" />
+                </g>
+              </g>
+            </g>
 
-    <!-- Equation at top center -->
-    <text x="0" y="-320"
-          text-anchor="middle"
-          font-size="40"
-          font-weight="bold"
-          font-style="italic"
-          font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif">
-      <tspan fill="#1565c0">a</tspan>
-      <tspan dy="-8" font-size="28" fill="#1565c0">2</tspan>
-      <tspan dy="8" fill="#000000"> + </tspan>
-      <tspan fill="#c62828">b</tspan>
-      <tspan dy="-8" font-size="28" fill="#c62828">2</tspan>
-      <tspan dy="8" fill="#000000"> = </tspan>
-      <tspan fill="#6a1b9a">c</tspan>
-      <tspan dy="-8" font-size="28" fill="#6a1b9a">2</tspan>
-    </text>
-  </svg>
+            <!-- Equation at top center -->
+            <text x="50" y="-260"
+                  text-anchor="middle"
+                  font-size="40"
+                  font-weight="bold"
+                  font-style="italic"
+                  font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif">
+              <tspan fill="#1565c0">a</tspan>
+              <tspan dy="-8" font-size="28" fill="#1565c0">2</tspan>
+              <tspan dy="8" fill="#000000"> + </tspan>
+              <tspan fill="#c62828">b</tspan>
+              <tspan dy="-8" font-size="28" fill="#c62828">2</tspan>
+              <tspan dy="8" fill="#000000"> = </tspan>
+              <tspan fill="#6a1b9a">c</tspan>
+              <tspan dy="-8" font-size="28" fill="#6a1b9a">2</tspan>
+            </text>
+          </svg>
+
+          <!-- slider in lower-right of SVG container -->
+          <div id="slider-wrapper">
+            <label for="angle">Angle:</label>
+            <input id="angle" type="range" min="0" max="180" value="0" />
+            <span id="angleValue">0°</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="right-column">
+        <a id="ixlBtn" href="ixl-resources.html">IXL Resources</a>
+        <a id="videosBtn" href="videos.html">Videos</a>
+        <a id="practiceBtn" href="practice.html">Practice</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2026 • Pythagorean Squares Rotator test
+  </footer>
 
   <script src="main.js"></script>
 </body>
 </html>
-
