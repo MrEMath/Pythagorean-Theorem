@@ -1,0 +1,23 @@
+<div class="puzzle-wrapper">
+  <div id="board">
+    <div id="instructions">
+  Instructions: Drag the pieces, use the ⟳ handle to rotate, and fit all four triangles and the red square inside the big square with no gaps or overlaps.
+</div>
+    <!-- target rectangle C -->
+    <img id="board2" src="pythagorean-puzzle2/images/board2.png" alt="board2" />
+
+    <!-- pieces: 4 triangles, 1 rectangle (a-b) -->
+    <img src="pythagorean-puzzle2/images/triangle.png" class="piece triangle" data-id="t1" alt="triangle 1" />
+    <img src="pythagorean-puzzle2/images/triangle.png" class="piece triangle" data-id="t2" alt="triangle 2" />
+    <img src="pythagorean-puzzle2/images/triangle.png" class="piece triangle" data-id="t3" alt="triangle 3" />
+    <img src="pythagorean-puzzle2/images/triangle.png" class="piece triangle" data-id="t4" alt="triangle 4" />
+
+    <img src="pythagorean-puzzle2/images/rectangle a-b.png" class="piece rectAB" data-id="r1" alt="rectangle a-b" />
+
+    <!-- rotate button (shows next to selected piece) -->
+    <button id="rotateBtn" type="button">⟳</button>
+
+    <!-- solved overlay (for later when all pieces snap) -->
+    <div id="solvedOverlay">✓</div>
+  </div>
+</div>

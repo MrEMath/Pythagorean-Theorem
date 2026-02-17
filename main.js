@@ -1,3 +1,4 @@
+// ===== rotator state =====
 const deviceWrapper = document.getElementById('deviceWrapper');
 const device = document.getElementById('device');
 const angleInput = document.getElementById('angle');
@@ -236,5 +237,66 @@ function update() {
   }
 }
 
-angleInput.addEventListener('input', update);
-update();
+// wire slider as soon as update is defined, but only if the element exists
+if (angleInput) {
+  angleInput.addEventListener('input', update);
+  update();
+}
+
+// ===== puzzle sequence loader =====
+// ===== puzzle sequence loader =====
+// ===== puzzle sequence loader =====
+const puzzleContainer = document.getElementById('puzzle-container');
+const nextPuzzleBtn = document.getElementById('nextPuzzleBtn');
+
+const puzzlePages = [
+  'pythagorean-puzzles/content.html',
+  'pythagorean-puzzle2/content.html',
+  'proof/content.html'
+];
+
+let currentPuzzleIndex = 0;
+
+function loadPuzzle(index) {
+  const url = puzzlePages[index];
+  fetch(url)
+    .then(res => res.text())
+    .then(html => {
+      puzzleContainer.innerHTML = html;
+      currentPuzzleIndex = index;
+
+      if (nextPuzzleBtn) nextPuzzleBtn.disabled = true;
+
+      const script = document.createElement('script');
+      script.src = 'pythagorean-puzzles/main.js';
+      script.defer = false;
+      document.body.appendChild(script);
+    })
+    .catch(err => {
+      console.error('Error loading puzzle', url, err);
+      puzzleContainer.innerHTML =
+        '<p style="padding:1rem;color:#c00;">Unable to load this puzzle.</p>';
+    });
+}
+
+// load first puzzle on page load
+loadPuzzle(currentPuzzleIndex);
+
+// called by each puzzle when it’s solved
+window.markPuzzleComplete = function () {
+  if (!nextPuzzleBtn) return;
+  if (currentPuzzleIndex < puzzlePages.length - 1) {
+    nextPuzzleBtn.disabled = false;
+  } else {
+    nextPuzzleBtn.disabled = true;
+  }
+};
+
+// clicking "Next puzzle" moves to the next page
+if (nextPuzzleBtn) {
+  nextPuzzleBtn.addEventListener('click', () => {
+    if (currentPuzzleIndex < puzzlePages.length - 1) {
+      loadPuzzle(currentPuzzleIndex + 1);
+    }
+  });
+}

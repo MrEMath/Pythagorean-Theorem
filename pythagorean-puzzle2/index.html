@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pythagorean Puzzle Prototype</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="board">
+    <!-- target rectangle C -->
+    <img id="rectC" src="rectangle-c.jpg" alt="Rectangle c" />
+
+    <!-- pieces: 4 triangles, 1 rectangle (a-b) -->
+    <img src="triangle.jpg" class="piece triangle" data-id="t1" alt="triangle 1" />
+    <img src="triangle.jpg" class="piece triangle" data-id="t2" alt="triangle 2" />
+    <img src="triangle.jpg" class="piece triangle" data-id="t3" alt="triangle 3" />
+    <img src="triangle.jpg" class="piece triangle" data-id="t4" alt="triangle 4" />
+
+    <img src="rectangle-a-b.jpg" class="piece rectAB" data-id="r1" alt="rectangle a-b" />
+
+    <!-- rotate button (shows next to selected piece) -->
+    <button id="rotateBtn" type="button">⟳</button>
+
+    <!-- solved overlay (for later when all pieces snap) -->
+    <div id="solvedOverlay">✓</div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
