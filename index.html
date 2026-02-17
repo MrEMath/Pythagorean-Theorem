@@ -11,18 +11,11 @@
     --offwhite: #F5F5F5;
   }
 
-  html, body {
-    height: 100%;
-  }
-
   body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: var(--offwhite);
     color: var(--charcoal);
-
-    display: flex;
-    flex-direction: column; /* header, main, footer stacked */
   }
 
   header {
@@ -30,16 +23,6 @@
     color: var(--offwhite);
     padding: 10px 20px;
     text-align: center;
-    flex: 0 0 auto;
-  }
-
-  footer {
-    margin-top: 20px;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--gray);
-    flex: 0 0 auto;
   }
 
   h1 {
@@ -48,10 +31,6 @@
   }
 
   main {
-    flex: 1 0 auto;          /* take remaining space between header/footer */
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
     padding: 20px;
     box-sizing: border-box;
   }
@@ -62,27 +41,25 @@
     justify-content: center;
     gap: 20px;
     width: 100%;
-    max-width: 1200px;       /* prevent infinite width */
+    max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box;
     position: relative;
   }
 
-  /* rotator container */
   #canvas-container {
-    flex: 0 0 auto;
     background: white;
     border: 4px solid var(--gray);
     border-radius: 8px;
     padding: 10px;
     margin: 0 auto;
-
   }
 
+  /* scale rotator so it fits typical screens */
   #viz-container {
     position: relative;
     width: 100%;
-    max-width: 700px;
+    max-width: 650px;
     height: auto;
   }
 
@@ -96,7 +73,6 @@
     display: block;
   }
 
-  /* slider in lower-right corner of the canvas area */
   #slider-wrapper {
     position: absolute;
     right: 16px;
@@ -142,28 +118,22 @@
     color: #fff;
   }
 
-  #ixlBtn {
-    background: #2ECC40;
+  #ixlBtn { background: #2ECC40; }
+  #ixlBtn:hover { background: #27AE60; }
+
+  #videosBtn { background: var(--red); }
+  #videosBtn:hover { background: #A01829; }
+
+  #practiceBtn { background-color: #c41524; }
+
+  footer {
+    margin-top: 20px;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--gray);
   }
 
-  #ixlBtn:hover {
-    background: #27AE60;
-  }
-
-  #videosBtn {
-    background: var(--red);
-  }
-
-  #videosBtn:hover {
-    background: #A01829;
-  }
-
-  #practiceBtn {
-    background-color: #c41524;
-    padding: 10px 20px; /* a bit smaller than the others */
-  }
-
-  /* puzzle sequence section */
   #puzzle-sequence {
     width: 100%;
     box-sizing: border-box;
@@ -207,11 +177,11 @@
     border-radius: 6px;
     background: #fafafa;
     min-height: 400px;
-    overflow: auto;              /* allow scroll if puzzle wider */
+    overflow: auto;
 
     display: flex;
     align-items: center;
-    justify-content: center;     /* centers the puzzle inside */
+    justify-content: center;
   }
 </style>
 
