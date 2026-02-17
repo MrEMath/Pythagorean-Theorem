@@ -3,278 +3,219 @@
 <head>
   <meta charset="UTF-8" />
   <title>Pythagorean Squares Rotator</title>
-  <style>
-    :root {
-      --red: #C51D34;
-      --charcoal: #2E2E30;
-      --gray: #808080;
-      --offwhite: #F5F5F5;
-    }
-html, body {
-  height: 100%;
-}
+<style>
+  :root {
+    --red: #C51D34;
+    --charcoal: #2E2E30;
+    --gray: #808080;
+    --offwhite: #F5F5F5;
+  }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--offwhite);
-  color: var(--charcoal);
+  html, body {
+    height: 100%;
+  }
 
-  display: flex;
-  flex-direction: column;   /* header, main, footer stacked */
-}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--offwhite);
+    color: var(--charcoal);
 
-header, footer {
-  flex: 0 0 auto;          /* stay at top and bottom */
-}
+    display: flex;
+    flex-direction: column; /* header, main, footer stacked */
+  }
 
-main {
-  flex: 1 0 auto;           /* take remaining space */
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 20px;
-  box-sizing: border-box;
-}
+  header {
+    background: var(--charcoal);
+    color: var(--offwhite);
+    padding: 10px 20px;
+    text-align: center;
+    flex: 0 0 auto;
+  }
 
-/* keep your existing .manip-row rules, but add: */
-.manip-row {
-  justify-content: center;
-}
+  footer {
+    margin-top: 20px;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--gray);
+    flex: 0 0 auto;
+  }
 
-/* make rotator fit on normal screens */
-#canvas-container {
-  flex: 0 0 auto;
-  background: white;
-  border: 4px solid var(--gray);
-  border-radius: 8px;
-  padding: 10px;
-  margin: 0 auto;
+  h1 {
+    margin: 0;
+    font-size: 1.4rem;
+  }
 
-  max-height: calc(100vh - 220px); /* header + footer + padding */
-  overflow: auto;                  /* scroll if too tall */
-}
+  main {
+    flex: 1 0 auto;          /* take remaining space between header/footer */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+  }
 
-#viz-container {
-  position: relative;
-  width: 100%;
-  max-width: 900px;
-  height: auto;
-}
+  .manip-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;       /* prevent infinite width */
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+  }
 
-#canvas {
-  width: 100%;
-  height: auto;
-}
+  /* rotator container */
+  #canvas-container {
+    flex: 0 0 auto;
+    background: white;
+    border: 4px solid var(--gray);
+    border-radius: 8px;
+    padding: 10px;
+    margin: 0 auto;
 
-/* center the puzzle contents inside its box */
-#puzzle-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  border: 2px solid var(--gray);
-  border-radius: 6px;
-  background: #fafafa;
-  min-height: 400px;
-  overflow: hidden;
+    max-height: calc(100vh - 220px); /* header + footer + padding */
+    overflow: auto;                  /* scroll inside if too tall */
+  }
 
-  display: flex;
-  align-items: center;
-  justify-content: center;  /* centers the puzzle inside */
-}
+  #viz-container {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+  }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--offwhite);
-      color: var(--charcoal);
-    }
+  #canvas {
+    width: 100%;
+    height: auto;
+  }
 
-    header {
-      background: var(--charcoal);
-      color: var(--offwhite);
-      padding: 10px 20px;
-      text-align: center;
-    }
+  svg {
+    border: 1px solid #ccc;
+    display: block;
+  }
 
-    h1 { margin: 0; font-size: 1.4rem; }
+  /* slider in lower-right corner of the canvas area */
+  #slider-wrapper {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    background: rgba(255, 255, 255, 0.8);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
 
-    main {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px;
-      justify-content: flex-start;
-      align-items: flex-start;
-      width: 100%;
-      box-sizing: border-box;
-    }
+  #slider-wrapper label {
+    margin-right: 4px;
+  }
 
-    .manip-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 20px;
-      width: 100%;
-      box-sizing: border-box;
-      position: relative;
-    }
+  #slider-wrapper input[type="range"] {
+    vertical-align: middle;
+  }
 
-    #canvas-container {
-      flex: 0 0 auto;
-      background: white;
-      border: 4px solid var(--gray);
-      border-radius: 8px;
-      padding: 10px;
-      position: relative;
-      margin: 0 auto;
-      width: fit-content;
-    }
+  .right-column {
+    position: relative;
+    top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 220px;
+  }
 
-    #viz-container {
-      position: relative;
-      width: 900px;
-      height: 900px;
-    }
+  #ixlBtn,
+  #videosBtn,
+  #practiceBtn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    color: #fff;
+  }
 
-    svg {
-      border: 1px solid #ccc;
-      display: block;
-    }
+  #ixlBtn {
+    background: #2ECC40;
+  }
 
-    /* slider in lower-right corner of the canvas area */
-    #slider-wrapper {
-      position: absolute;
-      right: 16px;
-      bottom: 16px;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 6px 10px;
-      border-radius: 6px;
-      font-size: 14px;
-    }
+  #ixlBtn:hover {
+    background: #27AE60;
+  }
 
-    #slider-wrapper label {
-      margin-right: 4px;
-    }
+  #videosBtn {
+    background: var(--red);
+  }
 
-    #slider-wrapper input[type="range"] {
-      vertical-align: middle;
-    }
+  #videosBtn:hover {
+    background: #A01829;
+  }
 
-    .right-column {
-      position: relative;
-      top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: stretch;
-      justify-content: flex-start;
-      width: 220px;
-    }
+  #practiceBtn {
+    background-color: #c41524;
+    padding: 10px 20px; /* a bit smaller than the others */
+  }
 
-    #ixlBtn {
-      background: #2ECC40;
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none;
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
+  /* puzzle sequence section */
+  #puzzle-sequence {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+    border-top: 2px solid var(--gray);
+    background: #ffffff;
+  }
 
-    #ixlBtn:hover { background: #27AE60; }
+  #puzzle-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto 10px auto;
+  }
 
-    #videosBtn {
-      background: var(--red);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: bold;
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
+  #puzzle-controls h2 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
 
-    #videosBtn:hover { background: #A01829; }
+  #nextPuzzleBtn {
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    border-radius: 4px;
+    border: none;
+    background: var(--red);
+    color: #fff;
+    cursor: pointer;
+  }
 
-    #practiceBtn {
-      background-color: #c41524;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      font-weight: bold;
-      text-decoration: none;
-      display: block;
-      width: 100%;
-      box-sizing: border-box;
-      text-align: center;
-    }
+  #nextPuzzleBtn:disabled {
+    background: #ccc;
+    cursor: default;
+  }
 
-    footer {
-      margin-top: 20px;
-      padding: 10px 20px;
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--gray);
-    }
+  #puzzle-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    border: 2px solid var(--gray);
+    border-radius: 6px;
+    background: #fafafa;
+    min-height: 400px;
+    overflow: auto;              /* allow scroll if puzzle wider */
 
-    /* puzzle sequence section */
-    #puzzle-sequence {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 20px;
-      border-top: 2px solid var(--gray);
-      background: #ffffff;
-    }
-
-    #puzzle-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 1200px;
-      margin: 0 auto 10px auto;
-    }
-
-    #puzzle-controls h2 {
-      margin: 0;
-      font-size: 1.2rem;
-    }
-
-    #nextPuzzleBtn {
-      padding: 8px 16px;
-      font-size: 0.95rem;
-      border-radius: 4px;
-      border: none;
-      background: var(--red);
-      color: #fff;
-      cursor: pointer;
-    }
-
-    #nextPuzzleBtn:disabled {
-      background: #ccc;
-      cursor: default;
-    }
-
-    #puzzle-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      border: 2px solid var(--gray);
-      border-radius: 6px;
-      background: #fafafa;
-      min-height: 400px;
-      overflow: hidden;
-    }
-  </style>
+    display: flex;
+    align-items: center;
+    justify-content: center;     /* centers the puzzle inside */
+  }
+</style>
 
   <!-- puzzle 1 assets, shared by injected content -->
   <link rel="stylesheet" href="pythagorean-puzzles/style.css">
