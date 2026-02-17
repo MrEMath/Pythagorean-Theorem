@@ -227,7 +227,7 @@ function update() {
         const unrot = rotatePoint(pWorld.x, pWorld.y, -deviceAngleRad);
         const unshift = translatePoint(unrot.x, unrot.y, centroidX, centroidY);
         const afterStaticTxInv = translatePoint(unshift.x, unshift.y, 0, -120);
-        const afterStaticRotInv = rotatePoint(afterStaticTxInv.x, afterStaticTxInv.y, -staticAngleRad);
+        const afterStaticRotInv = rotatePoint(afterStaticTxInv.x, afterStaticTxInv.y, -staticAngleDeg * Math.PI / 180);
         return afterStaticRotInv;
       });
 
@@ -244,7 +244,9 @@ if (angleInput) {
 }
 
 // ===== puzzle sequence loader =====
-// ===== puzzle sequence loader =====
+// rotator code...
+// wire slider...
+
 // ===== puzzle sequence loader =====
 const puzzleContainer = document.getElementById('puzzle-container');
 const nextPuzzleBtn = document.getElementById('nextPuzzleBtn');
@@ -257,26 +259,263 @@ const puzzlePages = [
 
 let currentPuzzleIndex = 0;
 
+// define initProof BEFORE loadPuzzle
+function initProof() {
+  if (window.markPuzzleComplete) {
+    window.markPuzzleComplete();
+  }
+}
+
 function loadPuzzle(index) {
   const url = puzzlePages[index];
   fetch(url)
     .then(res => res.text())
-    .then(html => {
-      puzzleContainer.innerHTML = html;
-      currentPuzzleIndex = index;
+.then(html => {
+  puzzleContainer.innerHTML = html;
+  currentPuzzleIndex = index;
 
-      if (nextPuzzleBtn) nextPuzzleBtn.disabled = true;
+  // default: disable Next until the current puzzle marks complete
+  if (nextPuzzleBtn) nextPuzzleBtn.disabled = true;
 
-      const script = document.createElement('script');
-      script.src = 'pythagorean-puzzles/main.js';
-      script.defer = false;
-      document.body.appendChild(script);
+      if (index === 1) {
+        initPuzzle2();
+      }
+      if (index === 2) {
+        initProof();
+      }
+
+      if (index === 0) {
+        const script = document.createElement('script');
+        script.src = 'pythagorean-puzzles/main.js';
+        script.defer = false;
+        document.body.appendChild(script);
+      }
     })
     .catch(err => {
       console.error('Error loading puzzle', url, err);
       puzzleContainer.innerHTML =
         '<p style="padding:1rem;color:#c00;">Unable to load this puzzle.</p>';
     });
+}
+
+function initPuzzle2() {
+  // query everything inside the loaded puzzle 2
+  const board = document.getElementById('board');
+  const pieces = Array.from(document.querySelectorAll('.piece'));
+  const rotateBtn = document.getElementById('rotateBtn');
+  const solvedOverlay = document.getElementById('solvedOverlay');
+
+  if (!board || !pieces.length) {
+    console.warn('Puzzle 2 elements not found');
+    return;
+  }
+
+  const pieceState = new Map(); // id -> { x, y, angle }
+
+  const initialPositions = {
+    t1: { x: 95,  y: 10,  angle: 90  },
+    t2: { x: 95,  y: 20,  angle: 270 },
+    t3: { x: 95,  y: 175, angle: 90  },
+    t4: { x: 95,  y: 185, angle: 270 },
+    r1: { x: 51,  y: 415, angle: 0   }
+  };
+
+  // any triangle can go on any of these four targets
+  const triangleTargets = [
+    { x: 598, y: 234, angle: 90  },
+    { x: 600, y: 233, angle: 270 },
+    { x: 376, y: 158, angle: 180 },
+    { x: 377, y: 158, angle: 360 }
+  ];
+
+  // rectangle target
+  const rectTarget = { x: 523, y: 158, angle: 0 };
+
+  const SNAP_POS_TOL = 20; // pixels
+  const SNAP_ANG_TOL = 10; // degrees
+
+  let selectedPiece = null;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+  let dragging = false;
+
+  let rotating = false;
+  let rotateStartAngle = 0; // radians
+  let pieceStartAngle = 0;  // radians
+
+  // ----- helpers -----
+
+  function applyTransform(piece) {
+    const id = piece.dataset.id;
+    const state = pieceState.get(id);
+    piece.style.transform =
+      `translate(${state.x}px, ${state.y}px) rotate(${state.angle}deg)`;
+  }
+
+  function positionRotateBtnFor(piece) {
+    if (!piece) {
+      rotateBtn.style.display = 'none';
+      return;
+    }
+    const boardRect = board.getBoundingClientRect();
+    const rect = piece.getBoundingClientRect();
+    const btnX = rect.right - boardRect.left + 5;
+    const btnY = rect.top - boardRect.top - 20;
+    rotateBtn.style.left = `${btnX}px`;
+    rotateBtn.style.top = `${btnY}px`;
+    rotateBtn.style.display = 'block';
+  }
+
+  function setSelected(piece) {
+    selectedPiece = piece;
+    pieces.forEach(p => p.classList.toggle('selected', p === piece));
+    positionRotateBtnFor(piece);
+  }
+
+  function initPositions() {
+    pieces.forEach(piece => {
+      const id = piece.dataset.id;
+      const init = initialPositions[id];
+      if (!init) return;
+      pieceState.set(id, { ...init });
+      applyTransform(piece);
+    });
+  }
+
+  function isSnapped(id, state) {
+    // rectangle has its own single target
+    if (id === 'r1') {
+      const dx = state.x - rectTarget.x;
+      const dy = state.y - rectTarget.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const dang = Math.abs(((state.angle - rectTarget.angle + 540) % 360) - 180);
+      return dist <= SNAP_POS_TOL && dang <= SNAP_ANG_TOL;
+    }
+
+    // triangles: any triangle can go on any triangle target
+    for (const target of triangleTargets) {
+      const dx = state.x - target.x;
+      const dy = state.y - target.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const dang = Math.abs(((state.angle - target.angle + 540) % 360) - 180);
+      if (dist <= SNAP_POS_TOL && dang <= SNAP_ANG_TOL) return true;
+    }
+    return false;
+  }
+
+  function checkSolved() {
+    for (const [id, state] of pieceState.entries()) {
+      if (!isSnapped(id, state)) return;
+    }
+    if (solvedOverlay) {
+      solvedOverlay.style.display = 'block';
+    }
+    if (window.markPuzzleComplete) {
+      window.markPuzzleComplete();
+    }
+  }
+
+  // ----- drag wiring -----
+
+  pieces.forEach(piece => {
+    piece.addEventListener('mousedown', e => {
+      e.preventDefault();
+      setSelected(piece);
+      const rect = board.getBoundingClientRect();
+      const state = pieceState.get(piece.dataset.id);
+      dragging = true;
+      dragOffsetX = e.clientX - (rect.left + state.x);
+      dragOffsetY = e.clientY - (rect.top + state.y);
+    });
+  });
+
+  board.addEventListener('mousemove', e => {
+    if (!dragging || !selectedPiece) return;
+    const rect = board.getBoundingClientRect();
+    const id = selectedPiece.dataset.id;
+    const state = pieceState.get(id);
+    state.x = e.clientX - rect.left - dragOffsetX;
+    state.y = e.clientY - rect.top - dragOffsetY;
+    applyTransform(selectedPiece);
+  });
+
+board.addEventListener('mouseup', () => {
+  if (!dragging || !selectedPiece) return;
+  dragging = false;
+  const id = selectedPiece.dataset.id;
+  const state = pieceState.get(id);
+  if (isSnapped(id, state)) {
+    // snap position only; keep whatever angle the student set
+    if (id === 'r1') {
+      state.x = rectTarget.x;
+      state.y = rectTarget.y;
+      // state.angle stays as-is
+    } else {
+      let bestTarget = null;
+      let bestDist = Infinity;
+      for (const target of triangleTargets) {
+        const dx = state.x - target.x;
+        const dy = state.y - target.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < bestDist) {
+          bestDist = dist;
+          bestTarget = target;
+        }
+      }
+      if (bestTarget) {
+        state.x = bestTarget.x;
+        state.y = bestTarget.y;
+        // state.angle stays as-is
+      }
+    }
+    applyTransform(selectedPiece);
+    checkSolved();
+  }
+});
+
+  board.addEventListener('mouseleave', () => {
+    dragging = false;
+  });
+
+  // ----- rotate wiring -----
+
+  rotateBtn.addEventListener('mousedown', e => {
+    e.preventDefault();
+    if (!selectedPiece) return;
+    rotating = true;
+    dragging = false;
+
+    const rect = selectedPiece.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    rotateStartAngle = Math.atan2(e.clientY - cy, e.clientX - cx);
+    const state = pieceState.get(selectedPiece.dataset.id);
+    pieceStartAngle = state.angle * Math.PI / 180;
+  });
+
+document.addEventListener('mousemove', e => {
+  if (!rotating || !selectedPiece) return;
+  const rect = selectedPiece.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+  const currentAngle = Math.atan2(e.clientY - cy, e.clientX - cx);
+  const delta = currentAngle - rotateStartAngle;
+  const state = pieceState.get(selectedPiece.dataset.id);
+  state.angle = ((pieceStartAngle + delta) * 180 / Math.PI + 360) % 360;
+  applyTransform(selectedPiece);
+  // no reposition here; let it “ride along” with the piece
+});
+
+  document.addEventListener('mouseup', () => {
+    if (rotating) {
+      rotating = false;
+      checkSolved();
+    }
+  });
+
+  // ----- init -----
+  initPositions();
 }
 
 // load first puzzle on page load
@@ -288,10 +527,9 @@ window.markPuzzleComplete = function () {
   if (currentPuzzleIndex < puzzlePages.length - 1) {
     nextPuzzleBtn.disabled = false;
   } else {
-    nextPuzzleBtn.disabled = true;
+    nextPuzzleBtn.disabled = true; // last puzzle; no next
   }
 };
-
 // clicking "Next puzzle" moves to the next page
 if (nextPuzzleBtn) {
   nextPuzzleBtn.addEventListener('click', () => {

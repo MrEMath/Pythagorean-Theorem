@@ -3,207 +3,317 @@
 <head>
   <meta charset="UTF-8" />
   <title>Pythagorean Squares Rotator</title>
-<style>
-:root {
-  --red: #C51D34;
-  --charcoal: #2E2E30;
-  --gray: #808080;
-  --offwhite: #F5F5F5;
+  <style>
+    :root {
+      --red: #C51D34;
+      --charcoal: #2E2E30;
+      --gray: #808080;
+      --offwhite: #F5F5F5;
+    }
+
+    html, body {
+      height: auto;
+      min-height: 100vh;
+      margin: 0;
+      display: block !important;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--offwhite);
+      color: var(--charcoal);
+    }
+
+    header {
+      background: var(--charcoal);
+      color: var(--offwhite);
+      padding: 10px 20px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.4rem;
+    }
+
+    main {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* TOP ROW LAYOUT */
+
+    .manip-row {
+      display: flex;
+      align-items: flex-start;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      column-gap: 20px;
+    }
+
+    /* left spacer to mirror right column width */
+    .side-spacer {
+      flex: 0 0 220px;
+    }
+
+    /* middle column that keeps the canvas centered */
+    .center-wrap {
+      flex: 1 1 auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Rotator container: centered main chunk */
+    #canvas-container {
+      max-width: 900px;
+      width: 100%;
+      background: white;
+      border: 4px solid var(--gray);
+      border-radius: 8px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    /* Rotator sizing so it fits at 100% zoom */
+    #viz-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      margin: 0 auto;
+    }
+
+    #canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+.piece-wrapper {
+  position: absolute;
+  transform-origin: center center;
 }
 
-html, body {
-  height: auto;
-  min-height: 100vh;
-  margin: 0;
-  display: block;      /* ensure no flex on root */
+.piece-wrapper .piece {
+  display: block;
 }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: var(--offwhite);
-  color: var(--charcoal);
+/* rotate button in the top-right corner of the wrapper */
+.piece-wrapper .rotateBtn {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: #fff;
+  font-size: 17px;
+  cursor: grab;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+  padding: 0;
 }
 
-header {
-  background: var(--charcoal);
-  color: var(--offwhite);
-  padding: 10px 20px;
-  text-align: center;
+.piece-wrapper .rotateBtn:active {
+  cursor: grabbing;
+  transform: scale(0.95);
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.4rem;
-}
+    svg {
+      border: 1px solid #ccc;
+      display: block;
+    }
 
-main {
-  padding: 20px;
-  box-sizing: border-box;
-}
+    #slider-wrapper {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
 
-.manip-row {
+    #slider-wrapper label {
+      margin-right: 4px;
+    }
+
+    #slider-wrapper input[type="range"] {
+      vertical-align: middle;
+    }
+
+    /* Right column buttons */
+
+    .right-column {
+      flex: 0 0 220px;
+      position: relative;
+      top: 12px;
+      display: flex;
+      flex-direction: column;
+      row-gap: 8px;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+
+    #ixlBtn,
+    #videosBtn,
+    #practiceBtn {
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: none;
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      color: #fff;
+    }
+
+    #ixlBtn { background: #2ECC40; }
+    #ixlBtn:hover { background: #27AE60; }
+
+    #videosBtn { background: var(--red); }
+    #videosBtn:hover { background: #A01829; }
+
+    #practiceBtn { background-color: #c41524; }
+
+    /* PUZZLE SEQUENCE SECTION */
+
+    /* Inner content column, aligned with rotator width */
+    #puzzle-sequence-inner {
+      width: 100%;
+      max-width: 900px;
+      margin: 30px auto 0 auto;
+    }
+
+    #puzzle-title {
+      margin: 10px 0 10px 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    #puzzle-controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0 10px 0;
+      gap: 8px;
+    }
+
+    #puzzle-controls h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      text-align: center;
+    }
+
+    #next-puzzle-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    #nextPuzzleBtn {
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      border: none;
+      background: var(--red);
+      color: #fff;
+      cursor: pointer;
+    }
+
+    #nextPuzzleBtn:disabled {
+      background: #ccc;
+      cursor: default;
+    }
+
+    /* Puzzle container box */
+#puzzle-container {
+  position: relative;          /* create stacking context */
+  max-width: 900px;
+  margin: 0 auto;
+  border: none;                /* remove the old border */
+  border-radius: 6px;
+  background: #fafafa;
+  min-height: 600px;
+  overflow: visible;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: 20px;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-  position: relative;
 }
 
-#canvas-container {
-  background: white;
+/* overlay border sitting on top of puzzle content */
+#puzzle-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;                    /* cover full container */
   border: 4px solid var(--gray);
-  border-radius: 8px;
-  padding: 10px;
-  margin: 0 auto;
+  border-radius: 6px;
+  pointer-events: none;        /* don’t block clicks/drags */
+  z-index: 10;                 /* above children */
 }
 
-/* rotator sizing so it fits at 100% zoom */
-#viz-container {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-}
+    footer {
+      margin-top: 20px;
+      padding: 10px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
 
-#canvas {
-  width: 100%;
-  height: auto;
-}
+    /* keep any internal #board from forcing extra height */
+    #board {
+      max-height: 600px;
+    }
 
-  svg {
-    border: 1px solid #ccc;
-    display: block;
-  }
+    /* proof board (used when proof loads) */
+    #proof-board {
+      position: relative;
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(circle at 30% 20%, #ffffff, #f0f0f0);
+      border-radius: 16px;
+      border: 1px solid #bbb;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      overflow: hidden;
+    }
 
-  #slider-wrapper {
-    position: absolute;
-    right: 16px;
-    bottom: 16px;
-    background: rgba(255, 255, 255, 0.8);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 14px;
-  }
+    #proof {
+      position: absolute;
+      left: 50px;
+      top: 170px;
+      width: 800px;
+      height: auto;
+      pointer-events: none;
+    }
 
-  #slider-wrapper label {
-    margin-right: 4px;
-  }
+    #instructions {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 25px 14px;
+      background: rgba(61, 61, 61, 0.7);
+      color: #fff;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      width: 759px;
+      text-align: center;
+      box-sizing: border-box;
+      pointer-events: none;
+    }
+  </style>
 
-  #slider-wrapper input[type="range"] {
-    vertical-align: middle;
-  }
-
-  .right-column {
-    position: relative;
-    top: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-    justify-content: flex-start;
-    width: 220px;
-  }
-
-  #ixlBtn,
-  #videosBtn,
-  #practiceBtn {
-    border: none;
-    padding: 12px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    text-align: center;
-    color: #fff;
-  }
-
-  #ixlBtn { background: #2ECC40; }
-  #ixlBtn:hover { background: #27AE60; }
-
-  #videosBtn { background: var(--red); }
-  #videosBtn:hover { background: #A01829; }
-
-  #practiceBtn { background-color: #c41524; }
-
-  footer {
-    margin-top: 20px;
-    padding: 10px 20px;
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--gray);
-  }
-
-  #puzzle-sequence {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 20px;
-    border-top: 2px solid var(--gray);
-    background: #ffffff;
-  }
-
-  #puzzle-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto 10px auto;
-  }
-
-  #puzzle-controls h2 {
-    margin: 0;
-    font-size: 1.2rem;
-  }
-
-  #nextPuzzleBtn {
-    padding: 8px 16px;
-    font-size: 0.95rem;
-    border-radius: 4px;
-    border: none;
-    background: var(--red);
-    color: #fff;
-    cursor: pointer;
-  }
-
-  #nextPuzzleBtn:disabled {
-    background: #ccc;
-    cursor: default;
-  }
-
-  #puzzle-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    border: 2px solid var(--gray);
-    border-radius: 6px;
-    background: #fafafa;
-    min-height: 400px;
-    overflow: auto;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  html, body {
-  display: block !important;
-  height: auto !important;
-  min-height: 100vh !important;
-}
-
-/* keep the board from forcing extra height */
-#board {
-  max-height: 600px;
-}
-</style>
-
-  <!-- puzzle 1 assets, shared by injected content -->
+  <!-- puzzle assets -->
   <link rel="stylesheet" href="pythagorean-puzzles/style.css">
+  <link rel="stylesheet" href="pythagorean-puzzle2/style.css">
 </head>
 <body>
   <header>
@@ -212,142 +322,150 @@ main {
 
   <main>
     <div class="manip-row">
-      <section id="canvas-container">
-        <div id="viz-container">
-          <!-- Canvas centered at (0,0) in viewBox -->
-          <svg id="canvas" viewBox="-296.6667 -310 700 700" width="900" height="900">
-            <!-- deviceWrapper will be rotated around the triangle centroid -->
-            <g id="deviceWrapper">
-              <g id="device">
-                <!-- Triangle: vertices (0,0), (160,0), (0,120) -->
-                <line x1="0" y1="0" x2="160" y2="0"
-                      stroke="#011b2b" stroke-width="3" />
-                <line x1="0" y1="0" x2="0" y2="120"
-                      stroke="#011b2b" stroke-width="3" />
-                <line x1="160" y1="0" x2="0" y2="120"
-                      stroke="#011b2b" stroke-width="3" />
-                <!-- side labels -->
-                <text x="-95" y="113" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-                      transform="rotate(180 -10 60)"
-                      fill="#c62828">b = 4</text>
-                <text x="10" y="43" text-anchor="end" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-                      transform="rotate(90 -10 60)"
-                      fill="#1565c0">a = 3</text>
-                <text x="60" y="105" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
-                      transform="rotate(-35 -10 60)"
-                      fill="#6a1b9a">c = 5</text>
+      <div class="side-spacer"></div>
 
-                <!-- Square on horizontal leg (160) with 4x4 grid -->
-                <g id="squareB">
-                  <line x1="40" y1="-160" x2="40" y2="0" stroke="#ffcdd2" stroke-width="1" />
-                  <line x1="80" y1="-160" x2="80" y2="0" stroke="#ffcdd2" stroke-width="1" />
-                  <line x1="120" y1="-160" x2="120" y2="0" stroke="#ffcdd2" stroke-width="1" />
-                  <line x1="0" y1="-120" x2="160" y2="-120" stroke="#ffcdd2" stroke-width="1" />
-                  <line x1="0" y1="-80"  x2="160" y2="-80"  stroke="#ffcdd2" stroke-width="1" />
-                  <line x1="0" y1="-40"  x2="160" y2="-40"  stroke="#ffcdd2" stroke-width="1" />
-                  <rect x="0" y="-160" width="160" height="160"
-                        fill="none" stroke="#c62828" stroke-width="6" />
-                  <polygon id="liqB"
-                           fill="rgba(198,40,40,0.25)" stroke="none" />
-                  <text x="80" y="-170"
-                        text-anchor="middle"
-                        font-size="16"
-                        font-family="system-ui, sans-serif"
-                        fill="#c62828"
-                        font-weight="bold">
-                        16 square units
-                  </text>
-                </g>
+      <div class="center-wrap">
+        <section id="canvas-container">
+          <div id="viz-container">
+            <!-- Canvas centered at (0,0) in viewBox -->
+            <svg id="canvas" viewBox="-296.6667 -310 700 700" width="900" height="900">
+              <!-- deviceWrapper will be rotated around the triangle centroid -->
+              <g id="deviceWrapper">
+                <g id="device">
+                  <!-- Triangle: vertices (0,0), (160,0), (0,120) -->
+                  <line x1="0" y1="0" x2="160" y2="0"
+                        stroke="#011b2b" stroke-width="3" />
+                  <line x1="0" y1="0" x2="0" y2="120"
+                        stroke="#011b2b" stroke-width="3" />
+                  <line x1="160" y1="0" x2="0" y2="120"
+                        stroke="#011b2b" stroke-width="3" />
+                  <!-- side labels -->
+                  <text x="-95" y="113" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                        transform="rotate(180 -10 60)"
+                        fill="#c62828">b = 4</text>
+                  <text x="10" y="43" text-anchor="end" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                        transform="rotate(90 -10 60)"
+                        fill="#1565c0">a = 3</text>
+                  <text x="60" y="105" text-anchor="middle" font-size="20" font-weight="bold" font-style="italic" font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif"
+                        transform="rotate(-35 -10 60)"
+                        fill="#6a1b9a">c = 5</text>
 
-                <!-- Square on vertical leg (120) with 3x3 grid -->
-                <g id="squareA">
-                  <line x1="-80" y1="0"  x2="-80" y2="120" stroke="#bbdefb" stroke-width="1" />
-                  <line x1="-40" y1="0"  x2="-40" y2="120" stroke="#bbdefb" stroke-width="1" />
-                  <line x1="-120" y1="40" x2="0"   y2="40"  stroke="#bbdefb" stroke-width="1" />
-                  <line x1="-120" y1="80" x2="0"   y2="80"  stroke="#bbdefb" stroke-width="1" />
-                  <rect x="-120" y="0" width="120" height="120"
-                        fill="none" stroke="#1565c0" stroke-width="6" />
-                  <polygon id="liqA"
-                           fill="rgba(21,101,192,0.25)" stroke="none" />
-                  <text x="-130" y="60"
-                        text-anchor="middle"
-                        font-size="16"
-                        font-weight="bold"
-                        font-family="system-ui, sans-serif"
-                        fill="#1565c0"
-                        transform="rotate(-90 -130,60)">
-                        9 square units
-                  </text>
-                </g>
+                  <!-- Square on horizontal leg (160) with 4x4 grid -->
+                  <g id="squareB">
+                    <line x1="40" y1="-160" x2="40" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                    <line x1="80" y1="-160" x2="80" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                    <line x1="120" y1="-160" x2="120" y2="0" stroke="#ffcdd2" stroke-width="1" />
+                    <line x1="0" y1="-120" x2="160" y2="-120" stroke="#ffcdd2" stroke-width="1" />
+                    <line x1="0" y1="-80"  x2="160" y2="-80"  stroke="#ffcdd2" stroke-width="1" />
+                    <line x1="0" y1="-40"  x2="160" y2="-40"  stroke="#ffcdd2" stroke-width="1" />
+                    <rect x="0" y="-160" width="160" height="160"
+                          fill="none" stroke="#c62828" stroke-width="6" />
+                    <polygon id="liqB"
+                             fill="rgba(198,40,40,0.25)" stroke="none" />
+                    <text x="80" y="-170"
+                          text-anchor="middle"
+                          font-size="16"
+                          font-family="system-ui, sans-serif"
+                          fill="#c62828"
+                          font-weight="bold">
+                          16 square units
+                    </text>
+                  </g>
 
-                <!-- Big square on hypotenuse with 5x5 grid -->
-                <g id="bigSquare" transform="translate(0,120) rotate(-36.87)">
-                  <line x1="40"  y1="0"   x2="40"  y2="200" stroke="#e1bee7" stroke-width="1" />
-                  <line x1="80"  y1="0"   x2="80"  y2="200" stroke="#e1bee7" stroke-width="1" />
-                  <line x1="120" y1="0"   x2="120" y2="200" stroke="#e1bee7" stroke-width="1" />
-                  <line x1="160" y1="0"   x2="160" y2="200" stroke="#e1bee7" stroke-width="1" />
-                  <line x1="0"   y1="40"  x2="200" y2="40"  stroke="#e1bee7" stroke-width="1" />
-                  <line x1="0"   y1="80"  x2="200" y2="80"  stroke="#e1bee7" stroke-width="1" />
-                  <line x1="0"   y1="120" x2="200" y2="120" stroke="#e1bee7" stroke-width="1" />
-                  <line x1="0"   y1="160" x2="200" y2="160" stroke="#e1bee7" stroke-width="1" />
-                  <rect x="0" y="0" width="200" height="200"
-                        fill="none" stroke="#6a1b9a" stroke-width="6" />
-                  <polygon id="liqC"
-                           fill="rgba(106,27,154,0.25)" stroke="none" />
-                  <text x="100" y="220"
-                        text-anchor="middle"
-                        font-size="16"
-                        font-family="system-ui, sans-serif"
-                        fill="#6a1b9a"
-                        font-weight="bold">
-                        25 square units
-                  </text>
+                  <!-- Square on vertical leg (120) with 3x3 grid -->
+                  <g id="squareA">
+                    <line x1="-80" y1="0"  x2="-80" y2="120" stroke="#bbdefb" stroke-width="1" />
+                    <line x1="-40" y1="0"  x2="-40" y2="120" stroke="#bbdefb" stroke-width="1" />
+                    <line x1="-120" y1="40" x2="0"   y2="40"  stroke="#bbdefb" stroke-width="1" />
+                    <line x1="-120" y1="80" x2="0"   y2="80"  stroke="#bbdefb" stroke-width="1" />
+                    <rect x="-120" y="0" width="120" height="120"
+                          fill="none" stroke="#1565c0" stroke-width="6" />
+                    <polygon id="liqA"
+                             fill="rgba(21,101,192,0.25)" stroke="none" />
+                    <text x="-130" y="60"
+                          text-anchor="middle"
+                          font-size="16"
+                          font-weight="bold"
+                          font-family="system-ui, sans-serif"
+                          fill="#1565c0"
+                          transform="rotate(-90 -130,60)">
+                          9 square units
+                    </text>
+                  </g>
+
+                  <!-- Big square on hypotenuse with 5x5 grid -->
+                  <g id="bigSquare" transform="translate(0,120) rotate(-36.87)">
+                    <line x1="40"  y1="0"   x2="40"  y2="200" stroke="#e1bee7" stroke-width="1" />
+                    <line x1="80"  y1="0"   x2="80"  y2="200" stroke="#e1bee7" stroke-width="1" />
+                    <line x1="120" y1="0"   x2="120" y2="200" stroke="#e1bee7" stroke-width="1" />
+                    <line x1="160" y1="0"   x2="160" y2="200" stroke="#e1bee7" stroke-width="1" />
+                    <line x1="0"   y1="40"  x2="200" y2="40"  stroke="#e1bee7" stroke-width="1" />
+                    <line x1="0"   y1="80"  x2="200" y2="80"  stroke="#e1bee7" stroke-width="1" />
+                    <line x1="0"   y1="120" x2="200" y2="120" stroke="#e1bee7" stroke-width="1" />
+                    <line x1="0"   y1="160" x2="200" y2="160" stroke="#e1bee7" stroke-width="1" />
+                    <rect x="0" y="0" width="200" height="200"
+                          fill="none" stroke="#6a1b9a" stroke-width="6" />
+                    <polygon id="liqC"
+                             fill="rgba(106,27,154,0.25)" stroke="none" />
+                    <text x="100" y="220"
+                          text-anchor="middle"
+                          font-size="16"
+                          font-family="system-ui, sans-serif"
+                          fill="#6a1b9a"
+                          font-weight="bold">
+                          25 square units
+                    </text>
+                  </g>
                 </g>
               </g>
-            </g>
 
-            <!-- Equation at top center -->
-            <text x="50" y="-260"
-                  text-anchor="middle"
-                  font-size="40"
-                  font-weight="bold"
-                  font-style="italic"
-                  font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif">
-              <tspan fill="#1565c0">a</tspan>
-              <tspan dy="-8" font-size="28" fill="#1565c0">2</tspan>
-              <tspan dy="8" fill="#000000"> + </tspan>
-              <tspan fill="#c62828">b</tspan>
-              <tspan dy="-8" font-size="28" fill="#c62828">2</tspan>
-              <tspan dy="8" fill="#000000"> = </tspan>
-              <tspan fill="#6a1b9a">c</tspan>
-              <tspan dy="-8" font-size="28" fill="#6a1b9a">2</tspan>
-            </text>
-          </svg>
+              <!-- Equation at top center -->
+              <text x="50" y="-260"
+                    text-anchor="middle"
+                    font-size="40"
+                    font-weight="bold"
+                    font-style="italic"
+                    font-family="Fira Sans, Cambria, 'Cambria Math', sans-serif">
+                <tspan fill="#1565c0">a</tspan>
+                <tspan dy="-8" font-size="28" fill="#1565c0">2</tspan>
+                <tspan dy="8" fill="#000000"> + </tspan>
+                <tspan fill="#c62828">b</tspan>
+                <tspan dy="-8" font-size="28" fill="#c62828">2</tspan>
+                <tspan dy="8" fill="#000000"> = </tspan>
+                <tspan fill="#6a1b9a">c</tspan>
+                <tspan dy="-8" font-size="28" fill="#6a1b9a">2</tspan>
+              </text>
+            </svg>
 
-          <!-- slider in lower-right of SVG container -->
-          <div id="slider-wrapper">
-            <label for="angle">Angle:</label>
-            <input id="angle" type="range" min="0" max="180" value="0" />
-            <span id="angleValue">0°</span>
+            <!-- slider in lower-right of SVG container -->
+            <div id="slider-wrapper">
+              <label for="angle">Angle:</label>
+              <input id="angle" type="range" min="0" max="180" value="0" />
+              <span id="angleValue">0°</span>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
 
       <div class="right-column">
         <a id="ixlBtn" href="ixl-resources.html">IXL Resources</a>
         <a id="videosBtn" href="videos.html">Videos</a>
         <a id="practiceBtn" href="practice.html">Practice</a>
       </div>
-    </div> <!-- end .manip-row -->
+    </div>
 
     <!-- puzzle sequence container -->
     <section id="puzzle-sequence">
-      <div id="puzzle-controls">
-        <h2>Pythagorean Puzzles</h2>
-        <button id="nextPuzzleBtn" type="button" disabled>Next puzzle</button>
-      </div>
-      <div id="puzzle-container">
-        <!-- pythagorean-puzzles/content.html will load here -->
+      <div id="puzzle-sequence-inner">
+        <h2 id="puzzle-title">Pythagorean Puzzles</h2>
+
+        <div id="puzzle-container">
+          <!-- puzzles will load here -->
+        </div>
+
+        <div id="next-puzzle-wrapper">
+          <button id="nextPuzzleBtn" type="button" disabled>Next puzzle</button>
+        </div>
       </div>
     </section>
   </main>
