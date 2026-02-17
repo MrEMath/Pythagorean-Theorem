@@ -28,11 +28,11 @@ body {
 
 /* target rectangle */
 
-#rectC {
+#board2 {
   position: absolute;
-  left: 400px;    /* adjust to taste */
+  left: 350px;    /* adjust to taste */
   top: 130px;
-  width: 365px;   /* keep consistent if you change */
+  width: 500px;   /* keep consistent if you change */
   height: auto;
   pointer-events: none;
 }
@@ -47,7 +47,7 @@ body {
 
 .rectAB {
   position: absolute;
-  width: 142px;       /* about 60% of c; tweak if needed */
+  width: 150px;       /* about 60% of c; tweak if needed */
   height: auto;
 }
 

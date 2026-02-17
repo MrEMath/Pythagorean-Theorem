@@ -4,69 +4,76 @@
   <meta charset="UTF-8" />
   <title>Pythagorean Squares Rotator</title>
 <style>
-  :root {
-    --red: #C51D34;
-    --charcoal: #2E2E30;
-    --gray: #808080;
-    --offwhite: #F5F5F5;
-  }
+:root {
+  --red: #C51D34;
+  --charcoal: #2E2E30;
+  --gray: #808080;
+  --offwhite: #F5F5F5;
+}
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--offwhite);
-    color: var(--charcoal);
-  }
+html, body {
+  height: auto;
+  min-height: 100vh;
+  margin: 0;
+  display: block;      /* ensure no flex on root */
+}
 
-  header {
-    background: var(--charcoal);
-    color: var(--offwhite);
-    padding: 10px 20px;
-    text-align: center;
-  }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--offwhite);
+  color: var(--charcoal);
+}
 
-  h1 {
-    margin: 0;
-    font-size: 1.4rem;
-  }
+header {
+  background: var(--charcoal);
+  color: var(--offwhite);
+  padding: 10px 20px;
+  text-align: center;
+}
 
-  main {
-    padding: 20px;
-    box-sizing: border-box;
-  }
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
 
-  .manip-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    box-sizing: border-box;
-    position: relative;
-  }
+main {
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-  #canvas-container {
-    background: white;
-    border: 4px solid var(--gray);
-    border-radius: 8px;
-    padding: 10px;
-    margin: 0 auto;
-  }
+.manip-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
+}
 
-  /* scale rotator so it fits typical screens */
-  #viz-container {
-    position: relative;
-    width: 100%;
-    max-width: 650px;
-    height: auto;
-  }
+#canvas-container {
+  background: white;
+  border: 4px solid var(--gray);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 0 auto;
+}
 
-  #canvas {
-    width: 100%;
-    height: auto;
-  }
+/* rotator sizing so it fits at 100% zoom */
+#viz-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+}
+
+#canvas {
+  width: 100%;
+  height: auto;
+}
 
   svg {
     border: 1px solid #ccc;
@@ -183,6 +190,16 @@
     align-items: center;
     justify-content: center;
   }
+  html, body {
+  display: block !important;
+  height: auto !important;
+  min-height: 100vh !important;
+}
+
+/* keep the board from forcing extra height */
+#board {
+  max-height: 600px;
+}
 </style>
 
   <!-- puzzle 1 assets, shared by injected content -->
