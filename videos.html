@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Videos - Transversals & Angle Relations</title>
+<style>
+  :root {
+    --red: #C51D34;
+    --charcoal: #2E2E30;
+    --gray: #808080;
+    --offwhite: #F5F5F5;
+  }
+  body { margin:0; font-family:Arial, sans-serif; background:var(--offwhite); color:var(--charcoal); }
+  header { background:var(--charcoal); color:var(--offwhite); padding:10px 20px; text-align:center; }
+  main { padding:20px; display:flex; justify-content:center; }
+  .content { background:white; max-width:800px; width:100%; border-radius:8px; padding:18px; box-shadow:0 0 6px rgba(0,0,0,0.12); }
+  h2 { color:var(--red); margin-top:0; }
+  .video-list { display:grid; gap:10px; margin-top:12px; }
+  .video-link { display:block; background:var(--red); color:var(--offwhite); padding:10px 12px; border-radius:6px; text-decoration:none; font-weight:bold; }
+  .video-link:hover { background:#A01829; }
+  .video-thumb { display:block; width:50%; max-width:440px; text-align:center; }
+  .video-title { color:var(--red); margin:6px 0 8px; text-align:center; font-size:1.5rem; font-weight:700; }
+  .back { margin-top:16px; }
+  .back a { display:inline-block; padding:10px 16px; background:var(--red); color:white; border-radius:4px; text-decoration:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Videos — Transversals & Angle Relationships</h1>
+</header>
+<main>
+  <div class="content">
+
+
+
+    <div class="video-list">
+      <!-- Add video links below -->
+      <div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+        <h3 class="video-title">Adjacent Angles</h3>
+        <a href="#" class="video-thumb" data-video="https://www.youtube.com/embed/IrCMhtyBJDw" id="firstVideo">
+          <img src="https://img.youtube.com/vi/IrCMhtyBJDw/hqdefault.jpg" alt="Intro to Transversals thumbnail" style="width:100%; border-radius:6px; display:block;">
+        </a>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+    <h3 class="video-title">Complementary, Supplementary, Vertical, Adjacent, & Congruent Angles</h3>
+    <a href="https://youtu.be/kZOotl5p4PA?si=z3WEce2Xgji1GY7V" class="video-thumb" data-video="https://www.youtube.com/embed/kZOotl5p4PA" id="secondVideo">
+        <img src="https://img.youtube.com/vi/kZOotl5p4PA/hqdefault.jpg" alt="Complementary, Supplementary, Vertical, Adjacent, & Congruent Angles thumbnail" style="width:100%; border-radius:6px; display:block;">
+    </a>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+    <h3 class="video-title">Alternate Interior & Alternate Exterior Angles</h3>
+    <a href="https://youtu.be/caN-HeknU2I?si=zWOta4HdXDJNzmN1" class="video-thumb" data-video="https://www.youtube.com/embed/caN-HeknU2I" id="fifthVideo">
+        <img src="https://img.youtube.com/vi/caN-HeknU2I/hqdefault.jpg" alt="New Video Title 2 thumbnail" style="width:100%; border-radius:6px; display:block;">
+    </a>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+    <h3 class="video-title">Parallel Lines and Transversals</h3>
+    <a href="https://youtu.be/TzTr5zbg3tE?si=JQ2wqYBKGEiUz0fy" class="video-thumb" data-video="https://www.youtube.com/embed/TzTr5zbg3tE" id="sixthVideo">
+        <img src="https://img.youtube.com/vi/TzTr5zbg3tE/hqdefault.jpg" alt="Parallel Lines and Transversals thumbnail" style="width:100%; border-radius:6px; display:block;">
+    </a>
+</div>
+    </div>
+<div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+    <h3 class="video-title">Find the Angle Measures</h3>
+    <a href="https://youtu.be/DIyzTaotpR0?si=Lc7iukn4w-Ra13J4" class="video-thumb" data-video="https://www.youtube.com/embed/DIyzTaotpR0" id="seventhVideo">
+        <img src="https://img.youtube.com/vi/DIyzTaotpR0/hqdefault.jpg" alt="Find the Angle Measures thumbnail" style="width:100%; border-radius:6px; display:block;">
+    </a>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-direction:column;">
+    <h3 class="video-title">Solve for x</h3>
+    <a href="https://youtu.be/IyCOaXMFGLE?si=UvlXrti2bNihGVzk" class="video-thumb" data-video="https://www.youtube.com/embed/IyCOaXMFGLE" id="eighthVideo">
+        <img src="https://img.youtube.com/vi/IyCOaXMFGLE/hqdefault.jpg" alt="Solve for x thumbnail" style="width:100%; border-radius:6px; display:block;">
+    </a>
+</div>
+    <div class="back">
+      <a href="index.html">Back to Manipulative</a>
+    </div>
+  </div>
+</main>
+<div id="videoModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <button id="closeModal" aria-label="Close video">✕</button>
+    <div class="video-wrapper">
+      <iframe id="videoIframe" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<style>
+  #videoModal { position: fixed; inset: 0; z-index: 1200; display: none; }
+  #videoModal.show { display: block; }
+  .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.7); }
+  .modal-content { position: absolute; left:50%; top:50%; transform: translate(-50%,-50%); width: 90%; max-width: 960px; background: transparent; }
+  .modal-content #closeModal { position: absolute; right: -8px; top: -28px; background: transparent; border: none; color: white; font-size: 22px; cursor: pointer; }
+  .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; }
+  .video-wrapper iframe { position: absolute; left:0; top:0; width:100%; height:100%; border-radius:8px; }
+</style>
+
+<script>
+  (function(){
+    const modal = document.getElementById('videoModal');
+    const iframe = document.getElementById('videoIframe');
+    const closeBtn = document.getElementById('closeModal');
+
+    function openVideo(url) {
+      iframe.src = url + (url.indexOf('?')===-1 ? '?autoplay=1&rel=0' : '&autoplay=1&rel=0');
+      modal.classList.add('show');
+    }
+    function closeVideo(){
+      modal.classList.remove('show');
+      iframe.src = '';
+    }
+
+    document.querySelectorAll('.video-link, .video-thumb').forEach(a=>{
+      a.addEventListener('click', e=>{
+        e.preventDefault();
+        const v = a.getAttribute('data-video');
+        if (v) openVideo(v);
+      });
+    });
+
+    closeBtn.addEventListener('click', closeVideo);
+    modal.querySelector('.modal-overlay').addEventListener('click', closeVideo);
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeVideo(); });
+  })();
+</script>
+</body>
+</html>
