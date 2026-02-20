@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- ==========================
+       META & STYLES
+       =========================== -->
+  <meta charset="UTF-8">
+  <title>Pythagorean Theorem</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ==========================
+       HEADER
+       =========================== -->
+  <header>
+    <h1>Pythagorean Theorem</h1>
+  </header>
+
+  <!-- ==========================
+       MAIN CONTENT
+       =========================== -->
+  <main>
+    <!-- ========================
+         STUDENT LOGIN SECTION
+         ========================= -->
+    <section id="login-screen">
+      <h2>Student Login</h2>
+
+      <label for="teacher-select">Teacher:</label>
+      <select id="teacher-select">
+        <option value="">Select your teacher</option>
+      </select>
+
+      <label for="student-select">Student:</label>
+      <select id="student-select" disabled>
+        <option value="">Select your name</option>
+      </select>
+
+      <!-- New Teacher Access link -->
+      <p>
+        <a href="teacher.html" id="teacher-access-link">Teacher Access</a>
+      </p>
+
+      <button id="login-button">Start Practice</button>
+      <p id="login-error" class="feedback-message warning"></p>
+    </section>
+<style>
+  body {
+    background: #ffffff;
+  }
+</style>
+    <!-- ========================
+         PRACTICE SECTION
+         ========================= -->
+<section id="practice-screen" style="display:none;">
+  <div id="progress-wrapper">
+    <div id="progress-bar"></div>
+  </div>
+
+  <div id="item-navigator"></div>
+
+<div id="problem-container">
+  <h2 id="problem-number"></h2>
+  <p id="problem-text"></p>
+
+  <!-- image wrapper for ALL questions -->
+  <div id="problem-image-wrapper" style="position: relative;">
+    <img id="problem-image" src="" alt="">
+    <!-- drag targets will be positioned on top when needed -->
+    <div id="drag-label-targets"></div>
+  </div>
+
+  <!-- label bank for dragLabel questions -->
+  <div id="drag-label-bank"></div>
+
+  <!-- ------- ACTION BUTTONS ------- -->
+  <button id="check-answer">Check Answer</button>
+  <button id="hint">Hint</button>
+  <button id="prev-question">Previous Question</button>
+  <button id="next-question">Next Question</button>
+  <button id="save-progress">Save Progress</button>
+  <button id="submit-practice">Submit Practice</button>
+</div>
+</section>
+
+    <!-- ========================
+         SUMMARY SECTION
+         ========================= -->
+    <div id="summary-screen" style="display:none;"></div>
+  </main>
+
+  <!-- ==========================
+       FOOTER
+       =========================== -->
+  <footer>
+    <p>&copy; 2026 Transversal Practice</p>
+  </footer>
+  <div id="image-overlay" class="image-overlay">
+  <div class="image-overlay-inner">
+    <img id="overlay-image" src="" alt="Zoomed choice">
+  </div>
+</div>
+
+  <!-- ==========================
+       SCRIPTS
+       =========================== -->
+  <!-- Supabase JS SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="supabase-client-triangles.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

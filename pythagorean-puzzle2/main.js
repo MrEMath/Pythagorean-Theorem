@@ -7,23 +7,22 @@ const solvedOverlay = document.getElementById('solvedOverlay');
 
 const pieceState = new Map(); // id -> { x, y, angle }
 
-// initial positions around the outside of rectangle-c
-// (all in board coordinates; tweak to suit your layout)
 const initialPositions = {
-  t1: { x: 40,  y: 60,  angle: 0 },
-  t2: { x: 540, y: 60,  angle: 0 },
-  t3: { x: 40,  y: 320, angle: 0 },
-  t4: { x: 540, y: 320, angle: 0 },
-  r1: { x: 300, y: 10,  angle: 0 }
+  t1: { x: 95,  y: 10,  angle: 90  },
+  t2: { x: 95,  y: 20,  angle: 270 },
+  t3: { x: 95,  y: 175,  angle: 90  },
+  t4: { x: 95,  y: 185,  angle: 270 },
+  r1: { x: 51,  y: 415,  angle: 0   }
 };
 
-// one example snap target (triangle t1)
-// position + angle where the piece should snap
 const snapTargets = {
-  t1: { x: 230, y: 90, angle: 0 } // adjust to where it should go on rectC
+   t1: { x: 598,  y: 234,  angle: 90  },
+  t2: { x: 600,  y: 233,  angle: 270 },
+  t3: { x: 376,  y: 158,  angle: 180  },
+  t4: { x: 377,  y: 158,  angle: 360 },
+  r1: { x: 523,  y: 158,  angle: 0   }
 };
 
-// tolerances for snapping
 const SNAP_POS_TOL = 20;   // pixels
 const SNAP_ANG_TOL = 10;   // degrees
 
@@ -32,12 +31,30 @@ let dragOffsetX = 0;
 let dragOffsetY = 0;
 let dragging = false;
 
+let rotating = false;
+let rotateStartAngle = 0;   // radians
+let pieceStartAngle = 0;    // radians
+
 // ===== helpers =====
 
 function applyTransform(piece) {
   const id = piece.dataset.id;
   const state = pieceState.get(id);
-  piece.style.transform = `translate(${state.x}px, ${state.y}px) rotate(${state.angle}deg)`;
+  piece.style.transform =
+    `translate(${state.x}px, ${state.y}px) rotate(${state.angle}deg)`;
+}
+function positionRotateBtnFor(piece) {
+  if (!piece) {
+    rotateBtn.style.display = 'none';
+    return;
+  }
+  const boardRect = board.getBoundingClientRect();
+  const rect = piece.getBoundingClientRect();
+  const btnX = rect.right - boardRect.left + 5;
+  const btnY = rect.top - boardRect.top - 20;
+  rotateBtn.style.left = `${btnX}px`;
+  rotateBtn.style.top = `${btnY}px`;
+  rotateBtn.style.display = 'block';
 }
 
 function setSelected(piece) {
@@ -49,7 +66,6 @@ function setSelected(piece) {
     return;
   }
 
-  // place rotate button near top-right of piece
   const rect = piece.getBoundingClientRect();
   const boardRect = board.getBoundingClientRect();
   const btnX = rect.right - boardRect.left + 5;
@@ -58,6 +74,11 @@ function setSelected(piece) {
   rotateBtn.style.left = `${btnX}px`;
   rotateBtn.style.top = `${btnY}px`;
   rotateBtn.style.display = 'block';
+}
+function setSelected(piece) {
+  selectedPiece = piece;
+  pieces.forEach(p => p.classList.toggle('selected', p === piece));
+  positionRotateBtnFor(piece);
 }
 
 function distance(a, b) {
@@ -71,26 +92,85 @@ function angleDiff(a, b) {
   return Math.abs(d);
 }
 
+// ===== shared-snap logic =====
+
+// prebuild an array of triangle slots from your snapTargets t1–t4
+const triangleSlots = ['t1','t2','t3','t4'].map(id => ({
+  id: `slot-${id}`,
+  x:  snapTargets[id].x,
+  y:  snapTargets[id].y,
+  angle: snapTargets[id].angle
+}));
+
+// r1 keeps its own fixed target from snapTargets
+const rectTarget = snapTargets.r1;
+
 function trySnap(piece) {
   const id = piece.dataset.id;
-  const target = snapTargets[id];
-  if (!target) return;
-
   const state = pieceState.get(id);
-  const nearPos = distance(state, target) < SNAP_POS_TOL;
-  const nearAng = angleDiff(state.angle, target.angle) < SNAP_ANG_TOL;
+
+  // red rectangle: snap only to its own target
+  if (id === 'r1') {
+    const nearPos = distance(state, rectTarget) < SNAP_POS_TOL;
+    const nearAng = angleDiff(state.angle, rectTarget.angle) < SNAP_ANG_TOL;
+
+    if (nearPos && nearAng) {
+      pieceState.set(id, { ...rectTarget });
+      applyTransform(piece);
+      piece.classList.add('snapped');
+    }
+    return;
+  }
+
+  // triangles: snap to nearest *free* triangle slot
+  if (!piece.classList.contains('triangle')) return;
+
+  let bestSlot = null;
+  let bestDist = Infinity;
+
+  triangleSlots.forEach(slot => {
+    const occupied = pieces.some(p => {
+      if (!p.classList.contains('triangle')) return false;
+      if (p === piece) return false;
+      return p.dataset.slotId === slot.id;
+    });
+    if (occupied) return;
+
+    const d = distance(state, slot);
+    if (d < bestDist) {
+      bestDist = d;
+      bestSlot = slot;
+    }
+  });
+
+  if (!bestSlot) return;
+
+  const nearPos = bestDist < SNAP_POS_TOL;
+  const nearAng = angleDiff(state.angle, bestSlot.angle) < SNAP_ANG_TOL;
 
   if (nearPos && nearAng) {
-    pieceState.set(id, { ...target });
+    pieceState.set(id, {
+      x: bestSlot.x,
+      y: bestSlot.y,
+      angle: bestSlot.angle
+    });
     applyTransform(piece);
     piece.classList.add('snapped');
+    piece.dataset.slotId = bestSlot.id;
   }
 }
 
 function checkSolved() {
-  // For now, only require t1 to be snapped.
-  const t1 = pieces.find(p => p.dataset.id === 't1');
-  if (t1 && t1.classList.contains('snapped')) {
+  const r1 = pieces.find(p => p.dataset.id === 'r1');
+
+  const trianglesDone = triangleSlots.every(slot =>
+    pieces.some(p =>
+      p.classList.contains('triangle') &&
+      p.dataset.slotId === slot.id
+    )
+  );
+
+  if (r1 && r1.classList.contains('snapped') && trianglesDone) {
     solvedOverlay.classList.add('visible');
   }
 }
@@ -104,9 +184,8 @@ pieces.forEach(piece => {
   applyTransform(piece);
 });
 
-// ===== event handlers =====
+// ===== drag events on pieces =====
 
-// click/select
 pieces.forEach(piece => {
   piece.addEventListener('pointerdown', event => {
     event.preventDefault();
@@ -144,7 +223,6 @@ pieces.forEach(piece => {
     pieceState.set(id, state);
     applyTransform(piece);
 
-    // move rotate button along with piece
     const rect = piece.getBoundingClientRect();
     const btnX = rect.right - boardRect.left + 5;
     const btnY = rect.top - boardRect.top - 20;
@@ -171,14 +249,60 @@ board.addEventListener('pointerdown', event => {
   }
 });
 
-// rotate button
-rotateBtn.addEventListener('click', () => {
+// ===== free rotation via handle =====
+
+rotateBtn.addEventListener('pointerdown', event => {
+  event.preventDefault();
   if (!selectedPiece) return;
+
+  rotating = true;
+  rotateBtn.setPointerCapture(event.pointerId);
+
+  const boardRect = board.getBoundingClientRect();
   const id = selectedPiece.dataset.id;
   const state = pieceState.get(id);
-  state.angle = (state.angle + 5) % 360;
+
+  const pieceRect = selectedPiece.getBoundingClientRect();
+  const cx = pieceRect.left - boardRect.left + pieceRect.width / 2;
+  const cy = pieceRect.top  - boardRect.top  + pieceRect.height / 2;
+
+  selectedPiece._center = { cx, cy };
+
+  const dx = event.clientX - boardRect.left - cx;
+  const dy = event.clientY - boardRect.top  - cy;
+  rotateStartAngle = Math.atan2(dy, dx); // radians
+  pieceStartAngle = state.angle * Math.PI / 180;
+});
+
+rotateBtn.addEventListener('pointermove', event => {
+  if (!rotating || !selectedPiece) return;
+  event.preventDefault();
+
+  const boardRect = board.getBoundingClientRect();
+  const { cx, cy } = selectedPiece._center;
+
+  const dx = event.clientX - boardRect.left - cx;
+  const dy = event.clientY - boardRect.top  - cy;
+  const currentAngle = Math.atan2(dy, dx);
+
+  const delta = currentAngle - rotateStartAngle;
+  const newAngleRad = pieceStartAngle + delta;
+  const newAngleDeg = (newAngleRad * 180 / Math.PI + 360) % 360;
+
+  const id = selectedPiece.dataset.id;
+  const state = pieceState.get(id);
+  state.angle = newAngleDeg;
   pieceState.set(id, state);
   applyTransform(selectedPiece);
-  trySnap(selectedPiece);
-  checkSolved();
+});
+
+rotateBtn.addEventListener('pointerup', event => {
+  if (!rotating) return;
+  rotating = false;
+  rotateBtn.releasePointerCapture(event.pointerId);
+
+  if (selectedPiece) {
+    trySnap(selectedPiece);
+    checkSolved();
+  }
 });

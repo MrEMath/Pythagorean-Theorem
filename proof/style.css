@@ -28,40 +28,13 @@ body {
 
 /* target rectangle */
 
-#rectC {
+#proof {
   position: absolute;
-  left: 400px;    /* adjust to taste */
-  top: 130px;
-  width: 365px;   /* keep consistent if you change */
+  left: 50px;    /* adjust to taste */
+  top: 170px;
+  width: 800px;   /* keep consistent if you change */
   height: auto;
   pointer-events: none;
-}
-
-/* pieces */
-
-.triangle {
-  position: absolute;
-  width: 150px;       /* about half of c; tweak if needed */
-  height: auto;
-}
-
-.rectAB {
-  position: absolute;
-  width: 142px;       /* about 60% of c; tweak if needed */
-  height: auto;
-}
-
-.piece {
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
-  transition: box-shadow 0.2s, filter 0.2s;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
-}
-
-.piece:active {
-  cursor: grabbing;
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
 }
 
 @keyframes pulse {
@@ -121,15 +94,16 @@ body {
 }
 #instructions {
   position: absolute;
-  top: 8px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 6px 14px;
+  padding: 25px 14px;
   background: rgba(61, 61, 61, 0.7);
   color: #fff;
   border-radius: 12px;
-  font-size: 14px;
-  width: 600px;        /* <-- set the width you want */
+  font-size: 20px;
+  font-weight: bold;
+  width: 759px;        /* <-- set the width you want */
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;

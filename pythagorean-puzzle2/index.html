@@ -7,16 +7,19 @@
 </head>
 <body>
   <div id="board">
+    <div id="instructions">
+  Instructions: Drag the pieces, use the ⟳ handle to rotate, and fit all four triangles and the red square inside the big square with no gaps or overlaps.
+</div>
     <!-- target rectangle C -->
-    <img id="rectC" src="rectangle-c.jpg" alt="Rectangle c" />
+    <img id="board2" src="images/board2.png" alt="board2" />
 
     <!-- pieces: 4 triangles, 1 rectangle (a-b) -->
-    <img src="triangle.jpg" class="piece triangle" data-id="t1" alt="triangle 1" />
-    <img src="triangle.jpg" class="piece triangle" data-id="t2" alt="triangle 2" />
-    <img src="triangle.jpg" class="piece triangle" data-id="t3" alt="triangle 3" />
-    <img src="triangle.jpg" class="piece triangle" data-id="t4" alt="triangle 4" />
+    <img src="images/triangle.png" class="piece triangle" data-id="t1" alt="triangle 1" />
+    <img src="images/triangle.png" class="piece triangle" data-id="t2" alt="triangle 2" />
+    <img src="images/triangle.png" class="piece triangle" data-id="t3" alt="triangle 3" />
+    <img src="images/triangle.png" class="piece triangle" data-id="t4" alt="triangle 4" />
 
-    <img src="rectangle-a-b.jpg" class="piece rectAB" data-id="r1" alt="rectangle a-b" />
+    <img src="images/rectangle a-b.png" class="piece rectAB" data-id="r1" alt="rectangle a-b" />
 
     <!-- rotate button (shows next to selected piece) -->
     <button id="rotateBtn" type="button">⟳</button>
@@ -25,6 +28,5 @@
     <div id="solvedOverlay">✓</div>
   </div>
 
-  <script src="main.js"></script>
 </body>
 </html>

@@ -3,16 +3,11 @@
   --highlight: #ffeb3b;
 }
 
-/* layout */
-
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* board layout */
+.puzzle-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #e0e0e0;
 }
 
 #board {
@@ -27,27 +22,25 @@ body {
 }
 
 /* target rectangle */
-
 #rectC {
   position: absolute;
-  left: 400px;    /* adjust to taste */
+  left: 400px;
   top: 130px;
-  width: 365px;   /* keep consistent if you change */
+  width: 365px;
   height: auto;
   pointer-events: none;
 }
 
 /* pieces */
-
 .triangle {
   position: absolute;
-  width: 150px;       /* about half of c; tweak if needed */
+  width: 150px;
   height: auto;
 }
 
 .rectAB {
   position: absolute;
-  width: 142px;       /* about 60% of c; tweak if needed */
+  width: 142px;
   height: auto;
 }
 
@@ -64,13 +57,7 @@ body {
   filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
 }
 
-@keyframes pulse {
-  from { box-shadow: 0 0 4px 0 rgba(255, 235, 59, 0.8); }
-  to   { box-shadow: 0 0 14px 4px rgba(255, 235, 59, 0.0); }
-}
-
 /* rotate button */
-
 #rotateBtn {
   position: absolute;
   width: 30px;
@@ -95,13 +82,12 @@ body {
   transform: scale(0.95);
 }
 
-/* solved overlay (not used yet, but wired up) */
-
+/* solved overlay */
 #solvedOverlay {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;       /* or width: 100% */
+  right: 0;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -119,6 +105,8 @@ body {
   opacity: 1;
   transform: scale(1);
 }
+
+/* instructions banner */
 #instructions {
   position: absolute;
   top: 8px;
@@ -129,7 +117,7 @@ body {
   color: #fff;
   border-radius: 12px;
   font-size: 14px;
-  width: 600px;        /* <-- set the width you want */
+  width: 600px;
   text-align: center;
   box-sizing: border-box;
   pointer-events: none;

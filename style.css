@@ -1,0 +1,521 @@
+:root {
+  --red: #C51D34;
+  --charcoal: #2E2E30;
+  --gray: #808080;
+  --offwhite: #F5F5F5;
+}
+
+html,
+body {
+  height: auto;
+  min-height: 100vh;
+  margin: 0;
+  display: block !important;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--offwhite);
+  color: var(--charcoal);
+}
+
+header {
+  background: var(--charcoal);
+  color: var(--offwhite);
+  padding: 10px 20px;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+main {
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* TOP ROW LAYOUT */
+
+.manip-row {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  column-gap: 20px;
+}
+
+/* left spacer to mirror right column width */
+.side-spacer {
+  flex: 0 0 220px;
+}
+
+/* middle column that keeps the canvas centered */
+.center-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Rotator container: centered main chunk */
+#canvas-container {
+  max-width: 900px;
+  width: 100%;
+  background: white;
+  border: 4px solid var(--gray);
+  border-radius: 8px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Rotator sizing so it fits at 100% zoom */
+#viz-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  margin: 0 auto;
+}
+
+#canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+svg {
+  border: 1px solid #ccc;
+  display: block;
+}
+
+.piece-wrapper {
+  position: absolute;
+  transform-origin: center center;
+}
+
+.piece-wrapper .piece {
+  display: block;
+}
+
+/* rotate button in the top-right corner of the wrapper */
+.piece-wrapper .rotateBtn {
+  position: absolute;
+  right: -10px;
+  top: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  color: #fff;
+  font-size: 17px;
+  cursor: grab;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.35);
+  padding: 0;
+}
+
+.piece-wrapper .rotateBtn:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+#slider-wrapper {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#slider-wrapper label {
+  margin-right: 4px;
+}
+
+#slider-wrapper input[type="range"] {
+  vertical-align: middle;
+}
+
+/* Right column buttons */
+
+.right-column {
+  flex: 0 0 220px;
+  position: relative;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+#ixlBtn,
+#videosBtn,
+#practiceBtn {
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  color: #fff;
+}
+
+#ixlBtn {
+  background: #2ECC40;
+}
+
+#ixlBtn:hover {
+  background: #27AE60;
+}
+
+#videosBtn {
+  background: var(--red);
+}
+
+#videosBtn:hover {
+  background: #A01829;
+}
+
+#practiceBtn {
+  background-color: #c41524;
+}
+
+/* PUZZLE SEQUENCE SECTION */
+
+/* Inner content column, aligned with rotator width */
+#puzzle-sequence-inner {
+  width: 100%;
+  max-width: 900px;
+  margin: 30px auto 0 auto;
+}
+
+#puzzle-title {
+  margin: 10px 0 10px 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+#puzzle-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px 0;
+  gap: 8px;
+}
+
+#puzzle-controls h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#next-puzzle-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#nextPuzzleBtn {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  border-radius: 4px;
+  border: none;
+  background: var(--red);
+  color: #fff;
+  cursor: pointer;
+}
+
+#nextPuzzleBtn:disabled {
+  background: #ccc;
+  cursor: default;
+}
+
+/* Puzzle container box */
+#puzzle-container {
+  position: relative; /* create stacking context */
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 6px;
+  background: #fafafa;
+  min-height: 600px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* overlay border sitting on top of puzzle content */
+#puzzle-container::after {
+  content: "";
+  position: absolute;
+  inset: 0; /* cover full container */
+  border: 4px solid var(--gray);
+  border-radius: 6px;
+  pointer-events: none; /* don’t block clicks/drags */
+  z-index: 10; /* above children */
+}
+
+footer {
+  margin-top: 20px;
+  padding: 10px 20px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+/* keep any internal #board from forcing extra height */
+#board {
+  max-height: 600px;
+}
+
+/* proof board (used when proof loads) */
+#proof-board {
+  position: relative;
+  width: 900px;
+  height: 600px;
+  background: radial-gradient(circle at 30% 20%, #ffffff, #f0f0f0);
+  border-radius: 16px;
+  border: 1px solid #bbb;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+#proof {
+  position: absolute;
+  left: 50px;
+  top: 170px;
+  width: 800px;
+  height: auto;
+  pointer-events: none;
+}
+
+#instructions {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 25px 14px;
+  background: rgba(61, 61, 61, 0.7);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  width: 759px;
+  text-align: center;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* ============================
+   PRACTICE PAGE STYLES
+   (used on practice.html)
+   ============================ */
+
+/* Ensure practice area shows once JS toggles it */
+#practice-screen {
+  display: block;
+}
+
+#problem-container {
+  display: block;
+}
+
+/* Progress bar */
+#progress-wrapper {
+  width: 100%;
+  background-color: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  height: 16px;
+  margin-bottom: 15px;
+}
+
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #316b33;
+  transition: width 0.3s ease;
+}
+
+/* Item navigator */
+#item-navigator {
+  margin-bottom: 20px;
+}
+
+#item-navigator .item-button {
+  margin: 2px;
+  padding: 6px 10px;
+  border: 1px solid #bbb;
+  background-color: #333;
+  color: #d0d0d0;
+  cursor: pointer;
+}
+
+#item-navigator .item-button.current {
+  background-color: #c51d34;
+  color: white;
+}
+
+#item-navigator .item-button.answered {
+  background-color: #316b33;
+  color: white;
+}
+
+/* Problem area */
+#problem-container img {
+  max-width: 100%;
+  height: auto;
+  margin: 10px 0;
+}
+
+#choices-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#choices-list li {
+  margin-bottom: 8px;
+}
+
+/* Feedback */
+.feedback-message {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.feedback-message.correct {
+  color: #316b33;
+}
+
+.feedback-message.incorrect {
+  color: #c62828;
+}
+
+.feedback-message.warning {
+  color: #ff8f00;
+}
+
+.feedback-message.hint {
+  color: #c51d34;
+}
+
+/* Buttons (shared look) */
+button {
+  background-color: #c41524;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 50px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-right: 8px;
+}
+
+button.secondary {
+  background-color: #555555;
+}
+
+button:hover:not(:disabled) {
+  background-color: #a01829;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Full-screen image overlay for mcImage zoom */
+.image-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: none; /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.image-overlay-inner img {
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 0 10px #000;
+  background: #fff;
+  border-radius: 4px;
+  cursor: zoom-out;
+}
+
+/* Drag-label question styles */
+
+#problem-image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+#drag-label-targets {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.drag-target-box {
+  position: absolute;
+  width: 90px;
+  height: 40px;
+  border: 2px dashed #555;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: pointer;
+  pointer-events: auto;
+  z-index: 3;
+}
+
+.drag-target-box.filled {
+  border-style: solid;
+  border-color: #0067A5;
+}
+
+.drag-label-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  margin: 6px;
+  border-radius: 6px;
+  background: #0067A5;
+  color: #fff;
+  font-weight: 600;
+  cursor: grab;
+  user-select: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.drag-label-tile:active {
+  cursor: grabbing;
+}
+
+#drag-label-bank {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
