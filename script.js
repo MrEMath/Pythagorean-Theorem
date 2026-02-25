@@ -3,6 +3,7 @@
 // ==============================
 const API_BASE_URL = "https://xsmhhduixpyotdhsjizr.supabase.co"; // TODO: replace or ignore
 
+
 // ==============================
 // ROSTERS (TEACHER → STUDENTS)
 // ==============================
@@ -67,6 +68,7 @@ const roster = {
   ]
 };
 
+
 // ==============================
 // LOCAL STUDENT ATTEMPT STORAGE
 // ==============================
@@ -90,10 +92,10 @@ function saveLocalAttempt(record) {
   localStorage.setItem("trianglePracticeResults", JSON.stringify(all));
 }
 
+
 // ==============================
 // SUPABASE SAVE HELPER
 // ==============================
-// instead of saveAttemptsToSupabase
 async function saveTriangleAttemptsToSupabase(records) {
   if (typeof window.supabaseTriangleClient === "undefined") {
     console.error("Triangle client is undefined");
@@ -122,6 +124,7 @@ async function saveTriangleAttemptsToSupabase(records) {
     console.log("Inserted triangle attempts", records);
   }
 }
+
 
 // ==============================
 // QUESTION DATA
@@ -160,27 +163,44 @@ const questions = [
     correct: "b",
     hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
   },
-{
-  id: 4,
-  sbg: 0.5,
-  type: "dragLabel",
-  text: "Label each side of the triangle.",
-  image: "practice-images/4.png",
-  labels: [
-    { id: "Leg", text: "Leg" },
-    
-    { id: "Hypotenuse", text: "Hypotenuse" }
-  ],
-  targets: [
-    { id: "side1", correctLabelId: "Leg", top: "10%", left: "55%" },
-    { id: "side2", correctLabelId: "Leg", top: "50%", left: "17%" },
-    { id: "side3", correctLabelId: "Hypotenuse", top: "60%", left: "60%" }
-  ],
-  hint: "c is opposite the right angle."
-}
+  {
+    id: 4,
+    sbg: 0.5,
+    type: "dragLabel",
+    text: "Label each side of the triangle.",
+    image: "practice-images/4.png",
+    labels: [
+      { id: "Leg", text: "Leg" },
+      { id: "Hypotenuse", text: "Hypotenuse" }
+    ],
+    targets: [
+      { id: "side1", correctLabelId: "Leg", top: "3%", left: "50%" },
+      { id: "side2", correctLabelId: "Leg", top: "45%", left: "15%" },
+      { id: "side3", correctLabelId: "Hypotenuse", top: "60%", left: "60%" }
+    ],
+    hint: "There are two legs and one hypotenuse in a right triangle."
+  },
+  {
+    id: 5, sbg: 0.5,
+    text: "For each statement, choose whether it is true or false.",
+    image: "", type: "matrix",
+    statements: [
+      { id: "stmt1", text: "The hypotenuse of a right triangle is the side opposite the right angle.", correct: "T" },
+      { id: "stmt2", text: "A right angle is formed where the hypotenuse meets one of the legs.", correct: "F" },
+      { id: "stmt3", text: "The hypotenuse of a right triangle is the longest side.", correct: "T" },
+      { id: "stmt4", text: "The length of a hypotenuse is equal to the sum of the lengths of the other two sides.", correct: "F" }
+    ],
+    hint: ""
+  },
+{ id: 6, sbg: 1.0, 
+    text: "What is the measure of the hypotenuse in the image below?", 
+    image: "practice-images/6.png", 
+    choices: [ "25", "7", "5", "6" ], 
+    correct: "c", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
 
-  // Add dragLabel items later as needed
 ];
+
 
 // ==============================
 // IN-MEMORY STATE
@@ -192,6 +212,7 @@ const questionStates = questions.map(() => ({
   attempts: 0
 }));
 let currentIndex = 0; // 0-based
+
 
 // ==============================
 // DOM ELEMENT REFERENCES
@@ -218,6 +239,7 @@ const summaryScreen = document.getElementById("summary-screen");
 const imageOverlay = document.getElementById("image-overlay");
 const overlayImage = document.getElementById("overlay-image");
 
+
 // ==============================
 // IMAGE OVERLAY HELPERS
 // ==============================
@@ -233,6 +255,7 @@ function hideImageOverlay() {
 }
 
 imageOverlay.addEventListener("click", hideImageOverlay);
+
 
 // ==============================
 // RESTORE PROGRESS FROM SUPABASE
@@ -251,7 +274,6 @@ async function restoreTriangleProgressFromSupabase(teacher, student) {
     return;
   }
 
-  // reset everything
   for (let i = 0; i < questions.length; i++) {
     studentAnswers[i] = null;
     questionStates[i] = { answered: false, correct: null, attempts: 0 };
@@ -263,7 +285,6 @@ async function restoreTriangleProgressFromSupabase(teacher, student) {
     return;
   }
 
-  // group rows by attempt_id (fallback to created_at if needed)
   const byAttempt = {};
   data.forEach(r => {
     const attemptId = r.attempt_id || new Date(r.created_at).getTime();
@@ -274,7 +295,6 @@ async function restoreTriangleProgressFromSupabase(teacher, student) {
   const attemptIds = Object.keys(byAttempt).map(Number).sort((a, b) => a - b);
   const latestAttemptRows = byAttempt[attemptIds[attemptIds.length - 1]];
 
-  // hydrate from the latest saved attempt
   latestAttemptRows.forEach(r => {
     const index = questions.findIndex(q => q.id === r.question_id);
     if (index === -1) return;
@@ -290,6 +310,7 @@ async function restoreTriangleProgressFromSupabase(teacher, student) {
   updateProgress();
   highlightNavigator();
 }
+
 
 // ==============================
 // LOGIN FLOW
@@ -317,6 +338,7 @@ loginButton.addEventListener("click", async () => {
   renderQuestion();
   updateProgress();
 });
+
 
 // ==============================
 // DROPDOWN POPULATION HELPERS
@@ -366,6 +388,7 @@ function restoreLoginIfPresent() {
   }
 }
 
+
 // ==============================
 // NAVIGATOR SETUP
 // ==============================
@@ -385,17 +408,37 @@ function initNavigator() {
   });
 }
 
+
 // ==============================
 // QUESTION RENDERING
 // ==============================
 function renderQuestion() {
   const q = questions[currentIndex];
 
-  // question number and stem (allow HTML, e.g. a<sup>2</sup>)
+  const targetsContainer = document.getElementById("drag-label-targets");
+  const labelBank = document.getElementById("drag-label-bank");
+
+  if (q.type === "dragLabel") {
+    if (targetsContainer) {
+      targetsContainer.style.display = "block";
+    }
+    if (labelBank) {
+      labelBank.style.display = "block";
+    }
+  } else {
+    if (targetsContainer) {
+      targetsContainer.style.display = "none";
+      targetsContainer.innerHTML = "";
+    }
+    if (labelBank) {
+      labelBank.style.display = "none";
+      labelBank.innerHTML = "";
+    }
+  }
+
   problemNumber.textContent = (currentIndex + 1) + ".";
   problemText.innerHTML = q.text;
 
-  // image
   if (q.image) {
     problemImage.style.display = "block";
     problemImage.src = q.image;
@@ -404,12 +447,10 @@ function renderQuestion() {
     problemImage.style.display = "none";
   }
 
-  // clear old choices
   choicesList.innerHTML = "";
 
   const stored = studentAnswers[currentIndex];
 
-  // ========= matrix (T/F table) =========
   if (q.type === "matrix") {
     const table = document.createElement("table");
     table.classList.add("tf-matrix");
@@ -457,7 +498,6 @@ function renderQuestion() {
     table.appendChild(tbody);
     choicesList.appendChild(table);
 
-  // ========= image-based MC (click to zoom) =========
   } else if (q.type === "mcImage") {
     const storedVal = stored;
 
@@ -492,7 +532,6 @@ function renderQuestion() {
       choicesList.appendChild(li);
     });
 
-  // ========= fill-in-the-blank =========
   } else if (q.type === "fill") {
     const storedObj = stored || {};
     q.blanks.forEach(blank => {
@@ -523,7 +562,6 @@ function renderQuestion() {
       choicesList.appendChild(li);
     });
 
-  // ========= multi-select (checkboxes) =========
   } else if (q.type === "multi") {
     const storedObj = stored || {};
     q.options.forEach(opt => {
@@ -538,14 +576,12 @@ function renderQuestion() {
       }
       const label = document.createElement("label");
       label.setAttribute("for", input.id);
-      label.innerHTML = opt.text; // allows <sup>
+      label.innerHTML = opt.text;
       li.appendChild(input);
       li.appendChild(label);
       choicesList.appendChild(li);
     });
 
-  // ========= fillSentence (inline blanks) =========
-  // ========= fillSentence (inline blanks) =========
   } else if (q.type === "fillSentence") {
     const storedObj = stored || {};
     const p = document.createElement("p");
@@ -570,22 +606,20 @@ function renderQuestion() {
 
     choicesList.appendChild(p);
 
-  // ========= dragLabel (drag labels to targets) =========
   } else if (q.type === "dragLabel") {
-    const imageWrapper = document.getElementById("problem-image-wrapper");
-    const targetsContainer = document.getElementById("drag-label-targets");
-    const labelBank = document.getElementById("drag-label-bank");
+    const storedObj = stored || {};
 
-    // clear old targets and labels
+    if (!targetsContainer || !labelBank) {
+      console.error("Missing drag-label containers in DOM");
+      return;
+    }
+
     targetsContainer.innerHTML = "";
     labelBank.innerHTML = "";
 
-    const storedObj = stored || {};
-
-    // create targets on top of the image
     q.targets.forEach(t => {
       const targetDiv = document.createElement("div");
-      targetDiv.classList.add("drag-target-box");      // matches CSS
+      targetDiv.classList.add("drag-target-box");
       targetDiv.dataset.targetId = t.id;
       targetDiv.dataset.correctLabelId = t.correctLabelId;
 
@@ -621,11 +655,10 @@ function renderQuestion() {
       targetsContainer.appendChild(targetDiv);
     });
 
-    // label bank under the image
     const labelsRow = document.createElement("div");
     q.labels.forEach(labelDef => {
       const labelDiv = document.createElement("div");
-      labelDiv.classList.add("drag-label-tile");       // matches CSS
+      labelDiv.classList.add("drag-label-tile");
       labelDiv.textContent = labelDef.text;
       labelDiv.draggable = true;
       labelDiv.dataset.labelId = labelDef.id;
@@ -639,7 +672,6 @@ function renderQuestion() {
 
     labelBank.appendChild(labelsRow);
 
-  // ========= default MC =========
   } else {
     const labels = ["a", "b", "c", "d"];
     q.choices.forEach((choiceText, i) => {
@@ -654,7 +686,7 @@ function renderQuestion() {
       }
       const label = document.createElement("label");
       label.setAttribute("for", input.id);
-      label.innerHTML = choiceText; // allows <sup>
+      label.innerHTML = choiceText;
       li.appendChild(input);
       li.appendChild(label);
       choicesList.appendChild(li);
@@ -667,6 +699,7 @@ function renderQuestion() {
   highlightNavigator();
   updateButtons();
 }
+
 
 // ==============================
 // ANSWER CAPTURE HELPERS
@@ -700,7 +733,8 @@ function getSelectedAnswer() {
 
   } else if (q.type === "dragLabel") {
     const result = {};
-    q.targets.forEach(t => {
+    const qDef = questions[currentIndex];
+    qDef.targets.forEach(t => {
       const targetDiv = document.querySelector(
         `.drag-target-box[data-target-id="${t.id}"]`
       );
@@ -765,6 +799,7 @@ async function saveCurrentQuestionToSupabase() {
   await saveTriangleAttemptsToSupabase([record]);
 }
 
+
 // ==============================
 // PROGRESS / NAV UI HELPERS
 // ==============================
@@ -794,6 +829,7 @@ function updateButtons() {
   }
 }
 
+
 // ==============================
 // SUBMIT PRACTICE (FINAL ATTEMPT)
 // ==============================
@@ -802,17 +838,14 @@ function finishPractice() {
   const currentStudent = rawStudent ? JSON.parse(rawStudent) : null;
   if (!currentStudent) return;
 
-  // 1) Auto-check all answered questions
   questions.forEach((q, index) => {
     if (studentAnswers[index] !== null) {
       evaluateAnswerAt(index);
     }
   });
 
-  // 2) Generate ONE attempt_id for this Submit
   const attemptId = createAttemptId();
 
-  // 3) Build records with attempt_id
   const records = questions.map((q, index) => ({
     teacher: currentStudent.teacher,
     studentName: currentStudent.student,
@@ -825,11 +858,9 @@ function finishPractice() {
     created_at: new Date().toISOString()
   }));
 
-  // local and Supabase save
   records.forEach(saveLocalAttempt);
   saveTriangleAttemptsToSupabase(records);
 
-  // 4) Summary screen
   const total = questions.length;
   const correctCount = questionStates.filter(s => s.correct === true).length;
   const percentCorrect = total ? Math.round((correctCount / total) * 100) : 0;
@@ -872,6 +903,7 @@ function finishPractice() {
     }
   }
 }
+
 
 // ==============================
 // GRADING HELPER
@@ -924,6 +956,7 @@ function evaluateAnswerAt(index) {
   return isCorrect;
 }
 
+
 // ==============================
 // BUTTON EVENT HANDLERS
 // ==============================
@@ -947,7 +980,7 @@ checkBtn.addEventListener("click", () => {
 hintBtn.addEventListener("click", () => {
   const q = questions[currentIndex];
   if (q.hint) {
-    feedback.innerHTML = q.hint; // allow <sup> in hints
+    feedback.innerHTML = q.hint;
     feedback.className = "hint";
   }
 });
@@ -1001,6 +1034,7 @@ if (saveProgressBtn) {
     feedback.className = "hint";
   });
 }
+
 
 // ==============================
 // INITIALIZE ON DOM READY
