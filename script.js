@@ -4,6 +4,7 @@
 const API_BASE_URL = "https://xsmhhduixpyotdhsjizr.supabase.co"; // TODO: replace or ignore
 
 
+
 // ==============================
 // ROSTERS (TEACHER → STUDENTS)
 // ==============================
@@ -69,11 +70,13 @@ const roster = {
 };
 
 
+
 // ==============================
 // LOCAL STUDENT ATTEMPT STORAGE
 // ==============================
 let allStudentData = [];
 let isDataReady = false;
+
 
 function loadLocalData() {
   const raw = localStorage.getItem("trianglePracticeResults");
@@ -81,9 +84,11 @@ function loadLocalData() {
   isDataReady = true;
 }
 
+
 function createAttemptId() {
   return Date.now(); // one id per full Submit
 }
+
 
 function saveLocalAttempt(record) {
   const raw = localStorage.getItem("trianglePracticeResults");
@@ -92,6 +97,12 @@ function saveLocalAttempt(record) {
   localStorage.setItem("trianglePracticeResults", JSON.stringify(all));
 }
 
+// MathJax helper: render LaTeX in a given element
+function typesetMathIn(element) {
+  if (window.MathJax && MathJax.typesetPromise && element) {
+    MathJax.typesetPromise([element]).catch(err => console.error(err));
+  }
+}
 
 // ==============================
 // SUPABASE SAVE HELPER
@@ -124,6 +135,7 @@ async function saveTriangleAttemptsToSupabase(records) {
     console.log("Inserted triangle attempts", records);
   }
 }
+
 
 
 // ==============================
@@ -187,76 +199,181 @@ const questions = [
     ],
     hint: ""
   },
-{ id: 6, sbg: 1.0, 
-    text: "What is the measure of the hypotenuse in the image below?", 
-    image: "practice-images/6.png", 
-    choices: [ "25", "7", "5", "6" ], 
-    correct: "c", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 7, sbg: 1.0, 
-    text: "What is the measure of the hypotenuse in the image below?", 
-    image: "practice-images/7.png", 
-    choices: [ "10", "14", "2", "100" ], 
-    correct: "a", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 8, sbg: 1.0, 
-    text: "What is the measure of the hypotenuse in the image below?", 
-    image: "practice-images/8.png", 
-    choices: [ "17", "7", "169", "13" ], 
-    correct: "d", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 9, sbg: 1.0, 
-    text: "What is the measure of the hypotenuse in the image below?", 
-    image: "practice-images/9.png", 
-    choices: [ "34", "14", "676", "26" ], 
-    correct: "d", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 10, sbg: 1.0, 
-    text: "What is the measure of the hypotenuse in the image below?", 
-    image: "practice-images/10.png", 
-    choices: [ "17", "23", "7", "289" ], 
-    correct: "a", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 11, sbg: 1.5, 
-    text: "What is the measure of the missing leg in the image below?", 
-    image: "practice-images/11.png", 
-    choices: [ "17", "23", "7", "289" ], 
-    correct: "a", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 12, sbg: 1.5, 
-    text: "What is the measure of the missing leg in the image below?", 
-    image: "practice-images/12.png", 
-    choices: [ "3", "15", "75", "53" ], 
-    correct: "b", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 13, sbg: 1.5, 
-    text: "What is the measure of the missing leg in the image below?", 
-    image: "practice-images/13.png", 
-    choices: [ "49", "9", "21", "35" ], 
-    correct: "c", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 14, sbg: 1.5, 
-    text: "What is the measure of the missing leg in the image below?", 
-    image: "practice-images/14.png", 
-    choices: [ "64", "52", "36", "48" ], 
-    correct: "d", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{ id: 15, sbg: 1.5, 
-    text: "What is the measure of the missing leg in the image below?", 
-    image: "practice-images/15.png", 
-    choices: [ "87", "121", "25", "55" ], 
-    correct: "d", 
-    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-{
-    id: 16, sbg: 1.5,
+  { id: 6, sbg: 1.0,
+    text: "What is the measure of the hypotenuse in the image below?",
+    image: "practice-images/6.png",
+    choices: [ "25", "7", "5", "6" ],
+    correct: "c",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 7, sbg: 1.0,
+    text: "What is the measure of the hypotenuse in the image below?",
+    image: "practice-images/7.png",
+    choices: [ "10", "14", "2", "100" ],
+    correct: "a",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 8, sbg: 1.0,
+    text: "What is the measure of the hypotenuse in the image below?",
+    image: "practice-images/8.png",
+    choices: [ "17", "7", "169", "13" ],
+    correct: "d",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 9, sbg: 1.0,
+    text: "What is the measure of the hypotenuse in the image below?",
+    image: "practice-images/9.png",
+    choices: [ "34", "14", "676", "26" ],
+    correct: "d",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 10, sbg: 1.0,
+    text: "What is the measure of the hypotenuse in the image below?",
+    image: "practice-images/10.png",
+    choices: [ "17", "23", "7", "289" ],
+    correct: "a",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 11, sbg: 1.5,
+    text: "What is the measure of the missing leg in the image below?",
+    image: "practice-images/11.png",
+    choices: [ "17", "23", "7", "289" ],
+    correct: "a",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 12, sbg: 1.5,
+    text: "What is the measure of the missing leg in the image below?",
+    image: "practice-images/12.png",
+    choices: [ "3", "15", "75", "53" ],
+    correct: "b",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 13, sbg: 1.5,
+    text: "What is the measure of the missing leg in the image below?",
+    image: "practice-images/13.png",
+    choices: [ "49", "9", "21", "35" ],
+    correct: "c",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 14, sbg: 1.5,
+    text: "What is the measure of the missing leg in the image below?",
+    image: "practice-images/14.png",
+    choices: [ "64", "52", "36", "48" ],
+    correct: "d",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 15, sbg: 1.5,
+    text: "What is the measure of the missing leg in the image below?",
+    image: "practice-images/15.png",
+    choices: [ "87", "121", "25", "55" ],
+    correct: "d",
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
+  },
+  { id: 16, sbg: 2.0,
     text: "The hypotenuse of a right triangle (c) is 15 inches and one of its legs (a) is 3 inches. Find the length of the other leg (b).",
     image: "",
     type: "fill",
     blanks: [
-      { id: "x", label: "b = \u221A", correct: "√(15^2 - 3^2)" },
+      // show the radical as proper math
+      { id: "x", label: "b = \\( \\sqrt{216} \\)", correct: "216" },
     ],
-    hint: "Use vertical, corresponding, and supplementary relationships."
-  },  ];
+    hint: "The length of one leg is equal to the square root of the difference of two squares."
+  },
+  { id: 17, sbg: 2.0,
+    text: "A right triangle has one leg that is 7 inches long and another leg that is 23 inches long. Find the length of the hypotenuse (c).",
+    image: "",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "c = \\( \\sqrt{578} \\)", correct: "578" },
+    ],
+    hint: "The length of one leg is equal to the square root of the difference of two squares."
+  },
+  { id: 18, sbg: 2.0,
+    text: "The side lengths of triangles are listed below. Determine which of the following side lengths create a right triangle. Select three.",
+    image: "", type: "multi",
+    options: [
+      { id: "A", text: "\\( (8 , 15 , 16) \\)", correct: true },
+      { id: "B", text: "\\( (6 , 8 , 12) \\)", correct: false },
+      { id: "C", text: "\\( (12 , 16 , 20) \\)", correct: true },
+      { id: "D", text: "\\( (5 , 12 , 13) \\)", correct: true },
+      { id: "E", text: "\\( (10 , 11 , 15) \\)", correct: false }
+    ],
+    hint: "Use the Converse of Pythagorean Theorem."
+  },
+  { id: 19, sbg: 2.0,
+    type: "matrixPythagorean",
+    text: "Determine whether each set of side lengths can form a right triangle.",
+    statements: [
+      { id: "s1", text: "\\( 7 , 9 , \\sqrt{130} \\)" },
+      { id: "s2", text: "\\( 7 , 24 , 25 \\)" },
+      { id: "s3", text: "\\( 8 , 16 , 17 \\)" },
+      { id: "s4", text: "\\( 12 , 16 , 20 \\)" },
+      { id: "s5", text: "\\( 11 , 19 , \\sqrt{482} \\)" }
+    ],
+    // answer key for this matrix
+    answerKey: {
+      s1: "R",
+      s2: "R",
+      s3: "N",
+      s4: "R",
+      s5: "N"
+    }
+  },
+  { id: 20, sbg: 2.0, 
+    text: "Which one of the following expressions can be used to find the length of a hypotenuse?", 
+    image: "", 
+    choices: [ "\\( \\sqrt{a^2 + c^2} \\)", "\\( \\sqrt{a^2 + b^2} \\)", "\\( \\sqrt{b^2 + c^2} \\)", "\\(a^2 + b^2 - c^2\\)" ], 
+    correct: "b", 
+    hint: "The hypotenuse is equal to the square root of the sum of two squares." },
+{
+    id: 21, sbg: 2.5,
+    text: "Running from the top of a flagpole to a hook in the ground there is a rope that is 17 meters long. If the hook is 8 meters from the base of the flagpole, how tall is the flagpole?",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "",labelAfter: " meters", correct: "15" },
+    ],
+    hint: "A leg length is equal to the square root of the difference of two squares."
+  },
+{
+    id: 22, sbg: 2.5,
+    text: "An oak tree is 12 meters tall and a bird is standing on the ground 5 meters from the tree. If the bird flies directly to the top of the tree, how far will it fly?",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "",labelAfter: " meters", correct: "13" },
+    ],
+    hint: "The hypotenuse is equal to the square root of the sum of two squares."
+  },
+  {
+    id: 23, sbg: 2.5,
+    text: "Find the shortest distance between the two points.",
+    type: "fill",
+    image: "practice-images/23.png",
+    blanks: [
+      { id: "x", label: "",labelAfter: " units", correct: "20" },
+    ],
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
+  },
+  {
+    id: 24, sbg: 2.5,
+    text: "Find the distance between the points \\( (1 , 3) \\) and \\( (4 , 5) \\). Round to the nearest tenth.",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "",labelAfter: " units", correct: "3.6" },
+    ],
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
+  },
+  {
+    id: 25, sbg: 2.5,
+    text: "Dillon is fishing from a small boat. His fishing hook is 3.6 meters below him, and a fish is swimming at the same depth as the hook, 4.6 meters away. How far away is Dillon from the fish? If necessary, round to the nearest tenth.",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "",labelAfter: " meters", correct: "5.8" },
+    ],
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
+  },
+
+];
+
 
 
 // ==============================
@@ -269,6 +386,7 @@ const questionStates = questions.map(() => ({
   attempts: 0
 }));
 let currentIndex = 0; // 0-based
+
 
 
 // ==============================
@@ -297,6 +415,7 @@ const imageOverlay = document.getElementById("image-overlay");
 const overlayImage = document.getElementById("overlay-image");
 
 
+
 // ==============================
 // IMAGE OVERLAY HELPERS
 // ==============================
@@ -306,12 +425,15 @@ function showImageOverlay(src, alt) {
   imageOverlay.style.display = "flex";
 }
 
+
 function hideImageOverlay() {
   imageOverlay.style.display = "none";
   overlayImage.src = "";
 }
 
+
 imageOverlay.addEventListener("click", hideImageOverlay);
+
 
 
 // ==============================
@@ -369,6 +491,7 @@ async function restoreTriangleProgressFromSupabase(teacher, student) {
 }
 
 
+
 // ==============================
 // LOGIN FLOW
 // ==============================
@@ -397,6 +520,7 @@ loginButton.addEventListener("click", async () => {
 });
 
 
+
 // ==============================
 // DROPDOWN POPULATION HELPERS
 // ==============================
@@ -409,6 +533,7 @@ function populateTeachers() {
     teacherSelectEl.appendChild(opt);
   });
 }
+
 
 function populateStudentsForTeacher(teacher) {
   studentSelectEl.innerHTML = "";
@@ -426,10 +551,12 @@ function populateStudentsForTeacher(teacher) {
   studentSelectEl.disabled = false;
 }
 
+
 teacherSelectEl.addEventListener("change", () => {
   const teacher = teacherSelectEl.value;
   populateStudentsForTeacher(teacher);
 });
+
 
 function restoreLoginIfPresent() {
   const raw = localStorage.getItem("triangleCurrentStudent");
@@ -444,6 +571,7 @@ function restoreLoginIfPresent() {
     console.error("Error parsing stored student", e);
   }
 }
+
 
 
 // ==============================
@@ -464,6 +592,7 @@ function initNavigator() {
     itemNavigator.appendChild(btn);
   });
 }
+
 
 
 // ==============================
@@ -494,6 +623,7 @@ function renderQuestion() {
   }
 
   problemNumber.textContent = (currentIndex + 1) + ".";
+  // Allow math markup in question text
   problemText.innerHTML = q.text;
 
   if (q.image) {
@@ -528,7 +658,8 @@ function renderQuestion() {
       const tr = document.createElement("tr");
 
       const tdText = document.createElement("td");
-      tdText.textContent = stmt.text;
+      // Allow math in statement text
+      tdText.innerHTML = stmt.text;
 
       const tdTrue = document.createElement("td");
       const trueInput = document.createElement("input");
@@ -595,7 +726,8 @@ function renderQuestion() {
       const li = document.createElement("li");
 
       const label = document.createElement("label");
-      label.textContent = (blank.label || "") + " ";
+      // Allow math before the blank
+      label.innerHTML = (blank.label || "") + " ";
       label.setAttribute("for", `blank-${blank.id}`);
 
       const input = document.createElement("input");
@@ -612,7 +744,8 @@ function renderQuestion() {
 
       if (blank.labelAfter) {
         const afterSpan = document.createElement("span");
-        afterSpan.textContent = blank.labelAfter;
+        // Allow math after the blank
+        afterSpan.innerHTML = blank.labelAfter;
         li.appendChild(afterSpan);
       }
 
@@ -633,6 +766,7 @@ function renderQuestion() {
       }
       const label = document.createElement("label");
       label.setAttribute("for", input.id);
+      // Allow math in option text
       label.innerHTML = opt.text;
       li.appendChild(input);
       li.appendChild(label);
@@ -657,13 +791,65 @@ function renderQuestion() {
         }
         p.appendChild(input);
       } else {
-        p.appendChild(document.createTextNode(part));
+        // Allow math in sentence parts
+        const span = document.createElement("span");
+        span.innerHTML = part;
+        p.appendChild(span);
       }
     });
 
     choicesList.appendChild(p);
 
-  } else if (q.type === "dragLabel") {
+  } else if (q.type === "matrixPythagorean") {
+    const table = document.createElement("table");
+    table.classList.add("tf-matrix");
+
+    const thead = document.createElement("thead");
+    thead.innerHTML = `
+      <tr>
+        <th>Sides</th>
+        <th>Right Triangle</th>
+        <th>Not a Right Triangle</th>
+      </tr>`;
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    const storedObj = stored || {};
+
+    q.statements.forEach(stmt => {
+      const tr = document.createElement("tr");
+
+      const tdText = document.createElement("td");
+      // Allow math in sides text if needed
+      tdText.innerHTML = stmt.text;
+
+      const tdRight = document.createElement("td");
+      const rightInput = document.createElement("input");
+      rightInput.type = "radio";
+      rightInput.name = stmt.id;
+      rightInput.value = "R";
+      if (storedObj[stmt.id] === "R") rightInput.checked = true;
+      tdRight.appendChild(rightInput);
+
+      const tdNotRight = document.createElement("td");
+      const notRightInput = document.createElement("input");
+      notRightInput.type = "radio";
+      notRightInput.name = stmt.id;
+      notRightInput.value = "N";
+      if (storedObj[stmt.id] === "N") notRightInput.checked = true;
+      tdNotRight.appendChild(notRightInput);
+
+      tr.appendChild(tdText);
+      tr.appendChild(tdRight);
+      tr.appendChild(tdNotRight);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    choicesList.appendChild(table);
+  }
+
+  if (q.type === "dragLabel") {
     const storedObj = stored || {};
 
     if (!targetsContainer || !labelBank) {
@@ -686,6 +872,7 @@ function renderQuestion() {
       const currentLabelId = storedObj[t.id];
       if (currentLabelId) {
         targetDiv.dataset.labelId = currentLabelId;
+        // labels here are just IDs, keep as text
         targetDiv.textContent = currentLabelId;
         targetDiv.classList.add("filled");
       } else {
@@ -731,7 +918,7 @@ function renderQuestion() {
 
   } else {
     const labels = ["a", "b", "c", "d"];
-    q.choices.forEach((choiceText, i) => {
+    q.choices && q.choices.forEach((choiceText, i) => {
       const li = document.createElement("li");
       const input = document.createElement("input");
       input.type = "radio";
@@ -743,6 +930,7 @@ function renderQuestion() {
       }
       const label = document.createElement("label");
       label.setAttribute("for", input.id);
+      // Allow math in legacy choice text
       label.innerHTML = choiceText;
       li.appendChild(input);
       li.appendChild(label);
@@ -755,7 +943,12 @@ function renderQuestion() {
   updateProgress();
   highlightNavigator();
   updateButtons();
+
+  // Render any LaTeX ( \( ... \), etc.) in the question area
+  const problemContainer = document.getElementById("problem-container");
+  typesetMathIn(problemContainer);
 }
+
 
 
 // ==============================
@@ -808,6 +1001,7 @@ function getSelectedAnswer() {
   }
 }
 
+
 function saveCurrentAnswer() {
   const q = questions[currentIndex];
   const ans = getSelectedAnswer();
@@ -834,6 +1028,7 @@ function saveCurrentAnswer() {
   studentAnswers[currentIndex] = ans;
 }
 
+
 async function saveCurrentQuestionToSupabase() {
   const rawStudent = localStorage.getItem("triangleCurrentStudent");
   if (!rawStudent) return;
@@ -857,6 +1052,7 @@ async function saveCurrentQuestionToSupabase() {
 }
 
 
+
 // ==============================
 // PROGRESS / NAV UI HELPERS
 // ==============================
@@ -871,6 +1067,7 @@ function updateProgress() {
   progressBar.style.width = `${percent}%`;
 }
 
+
 function highlightNavigator() {
   const buttons = document.querySelectorAll(".item-button");
   buttons.forEach((btn, index) => {
@@ -879,12 +1076,14 @@ function highlightNavigator() {
   });
 }
 
+
 function updateButtons() {
   nextBtn.disabled = currentIndex === questions.length - 1;
   if (prevBtn) {
     prevBtn.disabled = currentIndex === 0;
   }
 }
+
 
 
 // ==============================
@@ -962,6 +1161,7 @@ function finishPractice() {
 }
 
 
+
 // ==============================
 // GRADING HELPER
 // ==============================
@@ -1014,6 +1214,7 @@ function evaluateAnswerAt(index) {
 }
 
 
+
 // ==============================
 // BUTTON EVENT HANDLERS
 // ==============================
@@ -1034,6 +1235,7 @@ checkBtn.addEventListener("click", () => {
   highlightNavigator();
 });
 
+
 hintBtn.addEventListener("click", () => {
   const q = questions[currentIndex];
   if (q.hint) {
@@ -1041,6 +1243,7 @@ hintBtn.addEventListener("click", () => {
     feedback.className = "hint";
   }
 });
+
 
 if (prevBtn) {
   prevBtn.addEventListener("click", () => {
@@ -1052,6 +1255,7 @@ if (prevBtn) {
   });
 }
 
+
 nextBtn.addEventListener("click", () => {
   saveCurrentAnswer();
   if (currentIndex < questions.length - 1) {
@@ -1060,11 +1264,13 @@ nextBtn.addEventListener("click", () => {
   }
 });
 
+
 if (submitPracticeBtn) {
   submitPracticeBtn.addEventListener("click", () => {
     finishPractice();
   });
 }
+
 
 const saveProgressBtn = document.getElementById("save-progress");
 
@@ -1091,6 +1297,7 @@ if (saveProgressBtn) {
     feedback.className = "hint";
   });
 }
+
 
 
 // ==============================
