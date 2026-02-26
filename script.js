@@ -130,8 +130,7 @@ async function saveTriangleAttemptsToSupabase(records) {
 // QUESTION DATA
 // ==============================
 const questions = [
-  {
-    id: 1,
+  { id: 1,
     sbg: 0.5,
     text: "Which side of the triangle is the hypotenuse?",
     image: "practice-images/1.png",
@@ -139,8 +138,7 @@ const questions = [
     correct: "b",
     hint: "Remember that the hypotenuse is the side opposite the right angle and it is the longest side of the right triangle."
   },
-  {
-    id: 2,
+  { id: 2,
     sbg: 0.5,
     text: "In the following equation, which letter represents the hypotenuse?",
     image: "practice-images/2.png",
@@ -150,8 +148,7 @@ const questions = [
     ],
     hint: "The hypotenuse is the square root of the sum of the squares of the other two sides."
   },
-  {
-    id: 3,
+  { id: 3,
     sbg: 0.5,
     text: "Which equation accurately represents the diagram?",
     image: "practice-images/3.png",
@@ -163,8 +160,7 @@ const questions = [
     correct: "b",
     hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse."
   },
-  {
-    id: 4,
+  { id: 4,
     sbg: 0.5,
     type: "dragLabel",
     text: "Label each side of the triangle.",
@@ -180,8 +176,7 @@ const questions = [
     ],
     hint: "There are two legs and one hypotenuse in a right triangle."
   },
-  {
-    id: 5, sbg: 0.5,
+  { id: 5, sbg: 0.5,
     text: "For each statement, choose whether it is true or false.",
     image: "", type: "matrix",
     statements: [
@@ -198,8 +193,70 @@ const questions = [
     choices: [ "25", "7", "5", "6" ], 
     correct: "c", 
     hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
-
-];
+{ id: 7, sbg: 1.0, 
+    text: "What is the measure of the hypotenuse in the image below?", 
+    image: "practice-images/7.png", 
+    choices: [ "10", "14", "2", "100" ], 
+    correct: "a", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 8, sbg: 1.0, 
+    text: "What is the measure of the hypotenuse in the image below?", 
+    image: "practice-images/8.png", 
+    choices: [ "17", "7", "169", "13" ], 
+    correct: "d", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 9, sbg: 1.0, 
+    text: "What is the measure of the hypotenuse in the image below?", 
+    image: "practice-images/9.png", 
+    choices: [ "34", "14", "676", "26" ], 
+    correct: "d", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 10, sbg: 1.0, 
+    text: "What is the measure of the hypotenuse in the image below?", 
+    image: "practice-images/10.png", 
+    choices: [ "17", "23", "7", "289" ], 
+    correct: "a", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 11, sbg: 1.5, 
+    text: "What is the measure of the missing leg in the image below?", 
+    image: "practice-images/11.png", 
+    choices: [ "17", "23", "7", "289" ], 
+    correct: "a", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 12, sbg: 1.5, 
+    text: "What is the measure of the missing leg in the image below?", 
+    image: "practice-images/12.png", 
+    choices: [ "3", "15", "75", "53" ], 
+    correct: "b", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 13, sbg: 1.5, 
+    text: "What is the measure of the missing leg in the image below?", 
+    image: "practice-images/13.png", 
+    choices: [ "49", "9", "21", "35" ], 
+    correct: "c", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 14, sbg: 1.5, 
+    text: "What is the measure of the missing leg in the image below?", 
+    image: "practice-images/14.png", 
+    choices: [ "64", "52", "36", "48" ], 
+    correct: "d", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{ id: 15, sbg: 1.5, 
+    text: "What is the measure of the missing leg in the image below?", 
+    image: "practice-images/15.png", 
+    choices: [ "87", "121", "25", "55" ], 
+    correct: "d", 
+    hint: "Remember, the Pythagorean Theorem is a<sup>2</sup> + b<sup>2</sup> = c<sup>2</sup> where a and b are legs and c is the hypotenuse." },
+{
+    id: 16, sbg: 1.5,
+    text: "The hypotenuse of a right triangle (c) is 15 inches and one of its legs (a) is 3 inches. Find the length of the other leg (b).",
+    image: "",
+    type: "fill",
+    blanks: [
+      { id: "x", label: "b = \u221A", correct: "√(15^2 - 3^2)" },
+    ],
+    hint: "Use vertical, corresponding, and supplementary relationships."
+  },  ];
 
 
 // ==============================
