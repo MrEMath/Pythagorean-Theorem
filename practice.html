@@ -7,6 +7,20 @@
   <meta charset="UTF-8">
   <title>Pythagorean Theorem</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- MathJax configuration (must come BEFORE the script) -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']]  // use \( ... \) for inline math
+      }
+    };
+  </script>
+  <script
+    id="MathJax-script"
+    async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
 </head>
 <body>
   <!-- ==========================
@@ -44,47 +58,49 @@
       <button id="login-button">Start Practice</button>
       <p id="login-error" class="feedback-message warning"></p>
     </section>
-<style>
-  body {
-    background: #ffffff;
-  }
-</style>
+
+    <style>
+      body {
+        background: #ffffff;
+      }
+    </style>
+
     <!-- ========================
          PRACTICE SECTION
          ========================= -->
-<section id="practice-screen" style="display:none;">
-  <div id="progress-wrapper">
-    <div id="progress-bar"></div>
-  </div>
+    <section id="practice-screen" style="display:none;">
+      <div id="progress-wrapper">
+        <div id="progress-bar"></div>
+      </div>
 
-  <div id="item-navigator"></div>
+      <div id="item-navigator"></div>
 
-<div id="problem-container">
-  <h2 id="problem-number"></h2>
-  <p id="problem-text"></p>
+      <div id="problem-container">
+        <h2 id="problem-number"></h2>
+        <p id="problem-text"></p>
 
-  <!-- image wrapper for ALL questions -->
-  <div id="problem-image-wrapper" style="position: relative;">
-    <img id="problem-image" src="" alt="">
-    <!-- drag targets will be positioned on top when needed -->
-    <div id="drag-label-targets"></div>
-  </div>
+        <!-- image wrapper for ALL questions -->
+        <div id="problem-image-wrapper" style="position: relative;">
+          <img id="problem-image" src="" alt="">
+          <!-- drag targets will be positioned on top when needed -->
+          <div id="drag-label-targets"></div>
+        </div>
 
-  <!-- label bank for dragLabel questions -->
-  <div id="drag-label-bank"></div>
-  
-<div id="choices-list"></div>
+        <!-- label bank for dragLabel questions -->
+        <div id="drag-label-bank"></div>
 
-<p id="feedback" class="feedback-message"></p>
+        <div id="choices-list"></div>
 
-<button id="check-answer">Check Answer</button>
-<button id="hint">Hint</button>
-<button id="prev-question">Previous Question</button>
-<button id="next-question">Next Question</button>
-<button id="save-progress">Save Progress</button>
-<button id="submit-practice">Submit Practice</button>
-</div>
-</section>
+        <p id="feedback" class="feedback-message"></p>
+
+        <button id="check-answer">Check Answer</button>
+        <button id="hint">Hint</button>
+        <button id="prev-question">Previous Question</button>
+        <button id="next-question">Next Question</button>
+        <button id="save-progress">Save Progress</button>
+        <button id="submit-practice">Submit Practice</button>
+      </div>
+    </section>
 
     <!-- ========================
          SUMMARY SECTION
@@ -98,18 +114,18 @@
   <footer>
     <p>&copy; 2026 Transversal Practice</p>
   </footer>
+
   <div id="image-overlay" class="image-overlay">
-  <div class="image-overlay-inner">
-    <img id="overlay-image" src="" alt="Zoomed choice">
+    <div class="image-overlay-inner">
+      <img id="overlay-image" src="" alt="Zoomed choice">
+    </div>
   </div>
-</div>
 
   <!-- ==========================
        SCRIPTS
        =========================== -->
-  <!-- Supabase JS SDK -->
-<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-<script src="supabase-client-triangles.js"></script>
-<script src="script.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="supabase-client-triangles.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
