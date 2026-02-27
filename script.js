@@ -284,7 +284,7 @@ const questions = [
     image: "",
     type: "fill",
     blanks: [
-      { id: "x", label: "c = \\( \\sqrt{578} \\)", correct: "578" },
+      { id: "x", label: "c = ", correct: "578" },
     ],
     hint: "The length of one leg is equal to the square root of the difference of two squares."
   },
@@ -371,8 +371,48 @@ const questions = [
     ],
     hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
   },
+{
+    id: 26, sbg: 3.0,
+    text: "Find the distance between the points \\((-4 , 16.9)\\) and \\((12.4 , -8.1)\\). Round to the nearest tenth.",
+    type: "fill",
+    blanks: [
+      { id: "x", labelAfter: " units", correct: "29.9" },
+    ],
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
+  },
+  {
+    id: 27, sbg: 3.0,
+    text: "Two window washers, Jenny and Marvin, lean a ladder against the side of a building so that Jenny can wash a window while Marvin holds the ladder. The top of the ladder reaches the window, which is 4.3 meters off the ground. The base of the ladder is 1.7 meters away from the building. How long is the ladder? If necessary, round to the nearest tenth.",
+    type: "fill",
+    blanks: [
+      { id: "x", labelAfter: " meters", correct: "4.6" },
+    ],
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs."
+  },
+  {
+    id: 28, sbg: 3.0,
+    text: "What is the longest distance between two points in the rectangular prism? Round to the ones.",
+    type: "fill",
+    image: "practice-images/28.png",
+    blanks: [
+      { id: "x", labelAfter: " \\(cm\\)", correct: "8" },
+    ],
+    hint: "Treat the figure as a compound figure."
+  },
+  { id: 29, sbg: 3.0, 
+    text: "Where can you plot a third point to form a triangle with a hypotenuse of 5 units?", 
+    image: "practice-images/29.png", 
+    choices: [ "\\((2 , 3)\\)", "\\((-1 , -1)\\)", "\\((2 , -3)\\)", "\\((0 , 5)\\)" ], 
+    correct: "c", 
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs." },
+  { id: 30, sbg: 3.0, 
+    text: "The location of Bill and Ted is represented on the coordinate plane. Each grid line represents a distance of 0.5 miles. What is the approximate distance, in miles, between the two?", 
+    image: "practice-images/30.png", 
+    choices: [ "\\(3.54 mi\\)", "\\(7.07mi\\)", "\\(2.75 mi\\)", "\\(4.54 mi\\)" ], 
+    correct: "a", 
+    hint: "Use the vertical distance and horizontal distance as the lengths of two legs." },
 
-];
+  ];
 
 
 
