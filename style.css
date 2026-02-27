@@ -519,3 +519,12 @@ button:disabled {
   flex-wrap: wrap;
   gap: 8px;
 }
+.sbg-doughnut-wrapper {
+  max-width: 240px;   /* shrink this number to taste */
+  margin: 0 auto;
+}
+
+#sbg-doughnut {
+  width: 100% !important;
+  height: auto !important;
+}
