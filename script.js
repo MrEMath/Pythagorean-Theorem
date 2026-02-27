@@ -273,7 +273,7 @@ const questions = [
     type: "fill",
     blanks: [
       // show the radical as proper math
-      { id: "x", label: "b =)", correct: "216" },
+      { id: "x", label: "b =)", correct: "14.7" },
     ],
     hint: "The length of one leg is equal to the square root of the difference of two squares."
   },
