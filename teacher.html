@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Teacher Access</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Teacher Access</h1>
+  </header>
+
+  <main id="teacher-screen">
+    <!-- Login -->
+    <section id="teacher-login">
+      <h2>Teacher Login</h2>
+      <label for="teacher-name">Teacher:</label>
+      <select id="teacher-name">
+        <option value="">Select your name</option>
+        <option value="Englade">Englade</option>
+        <option value="Russell">Russell</option>
+        <option value="Miller">Miller</option>
+        <option value="Massengill">Massengill</option>
+        <option value="Clark">Clark</option>
+      </select>
+
+      <label for="teacher-password">Password:</label>
+      <input type="password" id="teacher-password">
+
+      <button id="teacher-login-btn">Log In</button>
+      <p id="teacher-login-error" class="feedback-message warning"></p>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="teacher-dashboard" style="display:none;">
+      <h2 id="dashboard-title"></h2>
+<button id="refresh-data-btn">Refresh data</button>
+
+      <!-- Overall stats -->
+      <section>
+        <h3>Overall Class Stats</h3>
+        <div id="overall-stats"></div>
+      </section>
+
+      <!-- SBG Levels doughnut -->
+      <section class="card sbg-card">
+        <div class="card-header">
+          <h3>SBG Levels</h3>
+        </div>
+        <div class="card-body">
+          <div class="chart-wrapper">
+            <canvas id="sbg-doughnut"></canvas>
+          </div>
+        </div>
+      </section>
+      <div id="sbg-summary" style="display:none;"></div>
+
+      <section class="card item-analysis-card">
+        <div class="card-header">
+          <h3>Item Analysis (All Students)</h3>
+        </div>
+        <div class="card-body">
+          <canvas id="item-bar-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- Item analysis table (to hide) -->
+      <section id="item-analysis-table-section">
+        <h3>Item Analysis (All Students)</h3>
+        <table id="item-analysis-table">
+          <thead>
+            <tr>
+              <th>Q#</th>
+              <th>SBG</th>
+              <th>% Correct</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <!-- Individual Student table card -->
+      <section class="card half-card" id="student-detail-card">
+        <div class="card-header">
+          <h3>Individual Student</h3>
+        </div>
+        <div class="card-body">
+          <div class="student-controls">
+            <label for="student-select">Student:</label>
+            <select id="student-select">
+              <option value="">Select a student</option>
+            </select>
+
+            <label for="attempt-select">Attempt:</label>
+            <select id="attempt-select">
+              <option value="">Select an attempt</option>
+            </select>
+          </div>
+      <button id="delete-attempt-btn">Delete Attempt</button>
+      <button id="reset-student-btn">Reset This Student</button>
+
+          <div id="student-summary"></div>
+
+          <h4>Item Analysis for Attempt</h4>
+          <div id="student-item-strip"></div>
+        </div>
+      </section>
+
+      <!-- Individual Student Overall Item Analysis card -->
+      <section class="card half-card" id="student-overall-card">
+        <div class="card-header">
+          <h3>Individual Student Overall Item Analysis</h3>
+        </div>
+        <div class="card-body">
+          <div id="item-flipcard">
+            <button id="prev-item-btn" class="nav-arrow">&lt;</button>
+            <div class="flipcard-frame">
+              <div class="flipcard-image-wrapper">
+                <img id="item-screenshot" src="" alt="Item screenshot">
+                <div class="flipcard-zoom-popup">
+                  <img src="" alt="Zoomed question screenshot">
+                </div>
+              </div>
+            </div>
+            <button id="next-item-btn" class="nav-arrow">&gt;</button>
+          </div>
+
+          <div id="item-accuracy">
+            <h4>Accuracy</h4>
+            <div id="accuracy-circle">
+              <span id="accuracy-percent">--%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Transversal Practice</p>
+  </footer>
+<!-- Supabase JS SDK -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script src="supabase-client-pythagorean.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<script src="teacher.js"></script>
+</body>
+</html>

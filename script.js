@@ -1,7 +1,7 @@
 // ==============================
 // API CONFIG (LEGACY, OPTIONAL)
 // ==============================
-const API_BASE_URL = "https://xsmhhduixpyotdhsjizr.supabase.co"; // TODO: replace or ignore
+const API_BASE_URL = "https://xsmhhduixpyotdhsjizr.supabase.co";
 
 
 
@@ -79,11 +79,10 @@ let isDataReady = false;
 
 
 function loadLocalData() {
-  const raw = localStorage.getItem("trianglePracticeResults");
+  const raw = localStorage.getItem("pythPracticeResults");
   allStudentData = raw ? JSON.parse(raw) : [];
   isDataReady = true;
 }
-
 
 function createAttemptId() {
   return Date.now(); // one id per full Submit
@@ -91,12 +90,11 @@ function createAttemptId() {
 
 
 function saveLocalAttempt(record) {
-  const raw = localStorage.getItem("trianglePracticeResults");
+  const raw = localStorage.getItem("pythPracticeResults");
   const all = raw ? JSON.parse(raw) : [];
   all.push(record);
-  localStorage.setItem("trianglePracticeResults", JSON.stringify(all));
+  localStorage.setItem("pythPracticeResults", JSON.stringify(all));
 }
-
 // MathJax helper: render LaTeX in a given element
 function typesetMathIn(element) {
   if (window.MathJax && MathJax.typesetPromise && element) {
@@ -107,14 +105,14 @@ function typesetMathIn(element) {
 // ==============================
 // SUPABASE SAVE HELPER
 // ==============================
-async function saveTriangleAttemptsToSupabase(records) {
-  if (typeof window.supabaseTriangleClient === "undefined") {
-    console.error("Triangle client is undefined");
+async function savePythAttemptsToSupabase(records) {
+  if (typeof window.supabasePythClient === "undefined") {
+    console.error("Pythagorean client is undefined");
     return;
   }
 
-  const { error } = await window.supabaseTriangleClient
-    .from("triangle_attempts")
+  const { error } = await window.supabasePythClient
+    .from("pythagorean_attempts")
     .insert(
       records.map(r => ({
         teacher: r.teacher,
@@ -130,9 +128,9 @@ async function saveTriangleAttemptsToSupabase(records) {
     );
 
   if (error) {
-    console.error("Error inserting triangle attempts", error);
+    console.error("Error inserting pythagorean attempts", error);
   } else {
-    console.log("Inserted triangle attempts", records);
+    console.log("Inserted pythagorean attempts", records);
   }
 }
 
@@ -479,11 +477,11 @@ imageOverlay.addEventListener("click", hideImageOverlay);
 // ==============================
 // RESTORE PROGRESS FROM SUPABASE
 // ==============================
-async function restoreTriangleProgressFromSupabase(teacher, student) {
-  if (typeof window.supabaseTriangleClient === "undefined") return;
+async function restorePythProgressFromSupabase(teacher, student) {
+  if (typeof window.supabasePythClient === "undefined") return;
 
-  const { data, error } = await window.supabaseTriangleClient
-    .from("triangle_attempts")
+  const { data, error } = await window.supabasePythClient
+    .from("pythagorean_attempts")
     .select("*")
     .eq("teacher", teacher)
     .eq("student_name", student);
@@ -546,14 +544,13 @@ loginButton.addEventListener("click", async () => {
 
   loginError.textContent = "";
   const currentStudent = { teacher, student };
-  localStorage.setItem("triangleCurrentStudent", JSON.stringify(currentStudent));
-
+localStorage.setItem("pythCurrentStudent", JSON.stringify(currentStudent));
   loginScreen.style.display = "none";
   practiceScreen.style.display = "block";
 
   initNavigator();
 
-  await restoreTriangleProgressFromSupabase(teacher, student);
+  await restorePythProgressFromSupabase(teacher, student);
 
   renderQuestion();
   updateProgress();
@@ -599,7 +596,7 @@ teacherSelectEl.addEventListener("change", () => {
 
 
 function restoreLoginIfPresent() {
-  const raw = localStorage.getItem("triangleCurrentStudent");
+const raw = localStorage.getItem("pythCurrentStudent");
   if (!raw) return;
   try {
     const currentStudent = JSON.parse(raw);
@@ -1070,7 +1067,7 @@ function saveCurrentAnswer() {
 
 
 async function saveCurrentQuestionToSupabase() {
-  const rawStudent = localStorage.getItem("triangleCurrentStudent");
+  const rawStudent = localStorage.getItem("pythCurrentStudent");
   if (!rawStudent) return;
 
   const { teacher, student } = JSON.parse(rawStudent);
@@ -1088,7 +1085,7 @@ async function saveCurrentQuestionToSupabase() {
     created_at: new Date().toISOString()
   };
 
-  await saveTriangleAttemptsToSupabase([record]);
+  await savePythAttemptsToSupabase([record]);
 }
 
 
@@ -1130,7 +1127,7 @@ function updateButtons() {
 // SUBMIT PRACTICE (FINAL ATTEMPT)
 // ==============================
 function finishPractice() {
-  const rawStudent = localStorage.getItem("triangleCurrentStudent");
+  const rawStudent = localStorage.getItem("pythCurrentStudent");
   const currentStudent = rawStudent ? JSON.parse(rawStudent) : null;
   if (!currentStudent) return;
 
@@ -1155,7 +1152,7 @@ function finishPractice() {
   }));
 
   records.forEach(saveLocalAttempt);
-  saveTriangleAttemptsToSupabase(records);
+  savePythAttemptsToSupabase(records);
 
   const total = questions.length;
   const correctCount = questionStates.filter(s => s.correct === true).length;
@@ -1316,7 +1313,7 @@ const saveProgressBtn = document.getElementById("save-progress");
 
 if (saveProgressBtn) {
   saveProgressBtn.addEventListener("click", async () => {
-    const rawStudent = localStorage.getItem("triangleCurrentStudent");
+    const rawStudent = localStorage.getItem("pythCurrentStudent");
     const currentStudent = rawStudent ? JSON.parse(rawStudent) : null;
     if (!currentStudent) return;
 
@@ -1332,7 +1329,7 @@ if (saveProgressBtn) {
       created_at: new Date().toISOString()
     }));
 
-    saveTriangleAttemptsToSupabase(records);
+    savePythAttemptsToSupabase(records);
     feedback.textContent = "Progress saved.";
     feedback.className = "hint";
   });
