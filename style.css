@@ -528,3 +528,12 @@ button:disabled {
   width: 100% !important;
   height: auto !important;
 }
+.item-bar-wrapper {
+  max-width: 480px;   /* adjust smaller/larger to taste */
+  margin: 0 auto;
+}
+
+#item-bar-chart {
+  width: 100% !important;
+  height: auto !important;
+}
