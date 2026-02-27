@@ -273,7 +273,7 @@ const questions = [
     type: "fill",
     blanks: [
       // show the radical as proper math
-      { id: "x", label: "b = \\( \\sqrt{216} \\)", correct: "216" },
+      { id: "x", label: "b =)", correct: "216" },
     ],
     hint: "The length of one leg is equal to the square root of the difference of two squares."
   },
@@ -282,7 +282,7 @@ const questions = [
     image: "",
     type: "fill",
     blanks: [
-      { id: "x", label: "c = ", correct: "578" },
+      { id: "x", label: "c = ", correct: "24" },
     ],
     hint: "The length of one leg is equal to the square root of the difference of two squares."
   },
